@@ -5,10 +5,38 @@ alias cp='cp -iv'
 alias mv='mv -iv'
 alias rm='rm -v'
 alias ip='ip -c'
+alias cl='clear'
+
+# SSH aliases
+alias sss='ssh cloud'
+alias ss8='ssh s8'
+alias con='ssh contabo'
+alias ssp='ssh pi-rack'
+alias sspr='ssh pi_room'
+alias ssr='ssh redripper'
+alias ss2='ssh cloud2'
+alias ssb='ssh pi_box'
+
+# Go development
+alias gotest='richgo test -v -race ./...'
+alias gorun='richgo run -v -race .'
+
+# Smarthome development
+alias mdev='make vite-dev'
+alias mrun='make run'
+alias mrel='make release'
+alias mtes='make test'
+alias shdb='docker exec -it smarthome-mariadb  mysql -u root -p'
+alias shtdb='docker exec -it smarthome-mariadb-testing mysql -u root -p'
+
 if command -v exa > /dev/null; then
     alias l='exa -lahg --icons --octal-permissions --git'
 else
     alias l='ls -lAh --color=auto'
+fi
+
+if command -v pixterm > /dev/null; then
+    alias li='pixterm *.(png|jpg|jpeg|PNG|JPG|JPEG)'
 fi
 
 updaterc () {
@@ -70,8 +98,6 @@ alias con='ssh contabo'
 alias poof='poweroff'
 alias pubip='curl ipinfo.io/ip'
 alias ipa='ip -br a'
-alias apdate='sudo apt update && sudo apt upgrade && sudo apt autoremove && sudo apt autoclean'
-alias occ='sudo docker exec -u www-data -it nextcloud php occ'
 alias sctl='sudo systemctl'
 alias sr='screen -r'
 alias sls='screen -ls'
@@ -118,9 +144,9 @@ rewg () {
 alias wg0='sudo systemctl stop wg-quick@wg1; sudo systemctl start wg-quick@wg0'
 alias wg1='sudo systemctl stop wg-quick@wg0; sudo systemctl start wg-quick@wg1'
 alias stopwg='sudo systemctl stop wg-quick@wg0; sudo systemctl stop wg-quick@wg1'
-alias startwg='sudo systemctl start wg-quick@wg0; sudo systemctl start wg-quick@wg1'
 
 cheat () { curl -s "cheat.sh/$1" | less; }
+
 colors () {
     zsh -c '
     for i in {0..255}; do
@@ -128,43 +154,10 @@ colors () {
     done'
 }
 
-postclip () { curl -sSL https://clip.rubixdev.de/index.php -F data="$1" -o /dev/null; }
-alias fetchclip='curl -sSL https://clip.rubixdev.de/clipboard.txt'
+postclip () {
+    getclip | quick-clip set -i
+}
 
-findfont () {
-    [ -n "$1" ] || {
-        echo "Please specify a symbol to search for"
-        return 1
-    }
-    python -c "import os
-
-fonts = []
-
-def add_fonts(directory):
-    if not os.path.isdir(directory): return
-    for root,dirs,files in os.walk(directory):
-        for file in files:
-            if file.endswith('.ttf'): fonts.append(os.path.join(root,file))
-
-add_fonts('/usr/share/fonts/')
-add_fonts('$HOME/.local/share/fonts/')
-add_fonts('$HOME/.fonts/')
-
-
-from fontTools.ttLib import TTFont
-
-def char_in_font(unicode_char, font):
-    for cmap in font['cmap'].tables:
-        if cmap.isUnicode():
-            if ord(unicode_char) in cmap.cmap:
-                return True
-    return False
-
-def test(char):
-    for fontpath in fonts:
-        font = TTFont(fontpath)   # specify the path to the font in question
-        if char_in_font(char, font):
-            print(char + ' in ' + fontpath)
-
-test('$1')"
+fetchclip () {
+    quick-clip get -o | setclip
 }
