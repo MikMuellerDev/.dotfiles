@@ -95,7 +95,7 @@ command -v wl-copy >/dev/null && { alias setclip='wl-copy'; alias getclip='wl-pa
 
 alias root='sudo su -'
 alias con='ssh contabo'
-alias poof='poweroff'
+command -v poof > /dev/null || alias poof='poweroff'
 alias pubip='curl ipinfo.io/ip'
 alias ipa='ip -br a'
 alias sctl='sudo systemctl'
