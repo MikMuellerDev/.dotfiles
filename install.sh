@@ -119,7 +119,7 @@ install_arch () {
         $aur -S --needed --noconfirm polybar sway-launcher-desktop bspwm sxhkd dunst \
             alacritty picom nitrogen numlockx slock neovim-remote ly \
             ttf-meslo-nerd-font-powerlevel10k ttf-jetbrains-mono xorg xcursor-breeze \
-            kvantum-theme-layan-git layan-gtk-theme-git kvantum qt5ct ttf-dejavu ttf-liberation \
+            kvantum-theme-orchis-git orchis-theme-git kvantum qt5ct ttf-dejavu ttf-liberation \
             noto-fonts-cjk noto-fonts-emoji noto-fonts-extra tela-icon-theme-green-git \
             network-manager-applet xcolor maim xsct xclip yarn rtkit lxqt-policykit || exit 2
         [ "$is_laptop" = true ] && { $aur -S --needed --noconfirm brightnessctl pamixer || exit 2; }
