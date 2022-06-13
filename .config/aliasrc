@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 alias tmux='tmux -2'
 alias cp='cp -iv'
@@ -36,7 +36,9 @@ else
 fi
 
 if command -v pixterm > /dev/null; then
-    alias li='pixterm *.(png|jpg|jpeg|PNG|JPG|JPEG)'
+    li () {
+        pixterm -f "${1:-.}/"*.*(png|jpg|jpeg|JPG|JPEG|PNG|webp|gif)
+    }
 fi
 
 updaterc () {
@@ -62,6 +64,7 @@ editrc () {
 }
 
 upd () {
+    # Package manager
     pwd="$(pwd)"
     if [ "$(uname -o)" = "Android" ]; then
         pkg upgrade
@@ -73,18 +76,28 @@ upd () {
     else
         paru -Syu
     fi
-    if [ -n "$(cargo install --list)" ]; then
-        # shellcheck disable=SC2046
-        cargo install $(cargo install --list | grep -E '^[a-z0-9_-]+ v[0-9.]+:$' | cut -f1 -d' ')
+
+    # Cargo packages
+    cargo_pkg_list=()
+    while IFS='' read -r line; do cargo_pkg_list+=("$line"); done < <(cargo install --list | grep -E '^[a-z0-9_-]+ v[0-9.]+:$' | cut -f1 -d' ')
+    if [ "${#cargo_pkg_list[@]}" -ne 0 ]; then
+        cargo install "${cargo_pkg_list[@]}"
     fi
+    unset cargo_pkg_list
+
+    # Go on Debian
     if command -v godeb > /dev/null; then
         [ "$(go version | grep -Po '\d+\.\d+\.\d+')" = "$(godeb list | tail -n 1)" ] || \
             godeb install "$(godeb list | tail -n 1)"
     fi
+
+    # dotfiles
     updaterc
+
+    # Oh-my-zsh plugins and themes
     pwd="$(pwd)"
-    for plugin in "$ZSH_CUSTOM"/plugins/*; do
-        cd "$plugin" || return 1
+    for d in "$ZSH_CUSTOM"/*/*; do
+        [ ! -d "$d" ] || cd "$d" || return 2
         git pull
     done
     cd "$pwd" || return 2

@@ -28,9 +28,12 @@ command -v uname > /dev/null && [ "$(uname -o)" = "Android" ] && is_android=true
 
 # Check if ZDOTDIR is set to non-home path
 # shellcheck disable=SC2016
+(
+    grep -q 'export ZDOTDIR="$HOME/.config/zsh"' "$PREFIX/etc/zsh/zshenv" > /dev/null 2>&1 ||
+    grep -q 'export ZDOTDIR="$HOME/.config/zsh"' "$PREFIX/etc/zshenv" > /dev/null 2>&1
+) && set_in_file=true
 if [ "${ZDOTDIR:-$HOME}" = "$HOME" ] &&
-    ! (grep -q 'export ZDOTDIR="$HOME/.config/zsh"' "$PREFIX/etc/zsh/zshenv" ||
-        grep -q 'export ZDOTDIR="$HOME/.config/zsh"' "$PREFIX/etc/zshenv") &&
+    [ "$set_in_file" != true ] &&
     prompt "Your ZSH config folder is set to HOME. Do you want to set it to '~/.config/zsh' globally?"
 then
     [ "$is_android" = true ] || sudo=sudo
@@ -44,11 +47,10 @@ then
     }
     [ -e "$PREFIX/etc/zshenv" ] && $sudo rm "$PREFIX/etc/zshenv"
     $sudo ln -sr "$PREFIX/etc/zsh/zshenv" "$PREFIX/etc/zshenv"
+    # shellcheck disable=SC2016
     echo 'export ZDOTDIR="$HOME/.config/zsh"' | $sudo tee -a "$PREFIX/etc/zsh/zshenv" > /dev/null
     export ZDOTDIR="$HOME/.config/zsh"
-elif grep -q 'export ZDOTDIR="$HOME/.config/zsh"' "$PREFIX/etc/zsh/zshenv" ||
-        grep -q 'export ZDOTDIR="$HOME/.config/zsh"' "$PREFIX/etc/zshenv"
-then
+elif [ "$set_in_file" = true ]; then
     export ZDOTDIR="$HOME/.config/zsh"
 fi
 
@@ -72,7 +74,7 @@ install_android () {
     pkg update -y
     pkg install -y ripgrep fd neovim zsh rust fzf git onefetch curl wget shellcheck \
         nodejs exa bat tmux lf python golang || exit 2
-    cargo install proximity-sort || exit 2
+    cargo install proximity-sort pixterm || exit 2
 
     if [ "$(basename "$SHELL")" != "zsh" ]; then
         chsh -s zsh
@@ -106,7 +108,8 @@ install_arch () {
     fi
 
     $aur -Sy --needed --noconfirm base-devel fd ripgrep neovim zsh rustup fzf git curl wget \
-        shellcheck pfetch-git neovim-plug nodejs npm exa bat tmux onefetch lf go \
+        shellcheck pfetch-git neovim-plug nodejs npm exa bat tmux onefetch lf go pixterm-rust \
+        autojump-rs \
         || [ "$is_root" = true ] || exit 2
     rustup default > /dev/null 2>&1 || { rustup default stable || exit 2; }
     $aur -S --needed --noconfirm proximity-sort || [ "$is_root" = true ] || exit 2
@@ -168,7 +171,7 @@ install_debian () {
     fi
 
     rustup default > /dev/null 2>&1 || { rustup default stable || exit 2; }
-    cargo install fd-find ripgrep proximity-sort onefetch || exit 2
+    cargo install fd-find ripgrep proximity-sort onefetch pixterm autojump || exit 2
 
     if ! command -v nvim > /dev/null; then
         wget 'https://github.com/neovim/neovim/releases/download/v0.7.0/nvim-linux64.deb' || exit 2

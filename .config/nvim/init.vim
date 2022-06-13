@@ -284,7 +284,7 @@ noremap <leader>s :Rg<space>
 let g:fzf_layout = { 'down': '~20%' }
 command! -bang -nargs=* Rg
     \ call fzf#vim#grep(
-    \   'rg --column --line-number --no-heading --color=always -. '.shellescape(<q-args>), 1,
+    \   'rg --column --line-number --no-heading --color=always -. -g "!.git" '.shellescape(<q-args>), 1,
     \   <bang>0 ? fzf#vim#with_preview('up:60%')
     \           : fzf#vim#with_preview('right:50%:hidden', '?'),
     \   <bang>0)
@@ -323,6 +323,9 @@ let g:vim_svelte_plugin_use_sass=1
 
 " Enable type inlay hints in rust
 autocmd CursorHold,CursorHoldI *.rs :lua require'lsp_extensions'.inlay_hints{ only_current_line = true }
+
+" Keybind to set markdown language to german
+nmap <Leader>ml :call append(line('0'), ['---', 'lang: de-DE', '---', ''])<CR>
 
 lua << END
 
