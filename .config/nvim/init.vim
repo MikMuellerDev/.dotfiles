@@ -86,6 +86,7 @@ Plug 'airblade/vim-gitgutter'
 
 " Markdown preview
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
+Plug 'ellisonleao/glow.nvim', {'branch': 'main'}
 
 call plug#end()
 
