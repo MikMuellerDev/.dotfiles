@@ -63,6 +63,7 @@ ZSH_HIGHLIGHT_STYLES[assign]=fg=14
 
 # Enable extended globbing
 setopt extendedglob
+
 source ~/.config/aliasrc
 
 echo
