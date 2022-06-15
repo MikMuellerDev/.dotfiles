@@ -23,9 +23,10 @@ export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 alias wget="wget --hsts-file='$XDG_DATA_HOME/wget-hsts'"
 
 export EDITOR=nvim
-procs="$(nproc)"
-export MAKEFLAGS="-j$procs"
-unset procs
+# Breaks some Makefukes
+# procs="$(nproc)"
+# export MAKEFLAGS="-j$procs"
+# unset procs
 export _JAVA_AWT_WM_NONREPARENTING=1
 
 # XDG-ninja
