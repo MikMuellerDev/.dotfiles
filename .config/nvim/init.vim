@@ -11,7 +11,6 @@ set nofoldenable
 set scrolloff=3 " Minimum lines to keep above and below cursor when scrolling
 set noshowmode " Do not display current mode because we have airline
 set undofile " Preserve undo history when exiting vim
-set spell " Enable spellcheck
 set signcolumn=yes " Always draw sign column. Prevent buffer moving when adding/deleting sign.
 set nocompatible " Required for polyglot
 " Return to last edit position when opening files (You want this!)
@@ -252,6 +251,9 @@ noremap <leader>M :!make<CR>
 
 " Keymap for replacing up to next _ or -
 noremap <leader>m ct_
+
+" Delete, not cut
+nnoremap <leader>d "_d
 
 " Git
 nmap <leader>ga :Git add -p<CR>
