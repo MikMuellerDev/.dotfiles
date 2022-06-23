@@ -57,6 +57,7 @@ Plug 'pangloss/vim-javascript'
 Plug 'HerringtonDarkholme/yats.vim'
 Plug 'Shougo/context_filetype.vim'
 Plug 'sheerun/vim-polyglot'
+Plug 'MikMuellerDev/vim-homescript'
 
 " LSP setup
 Plug 'neovim/nvim-lspconfig'
