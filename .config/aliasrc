@@ -35,11 +35,7 @@ else
     alias l='ls -lAh --color=auto'
 fi
 
-if command -v pixterm > /dev/null; then
-    li () {
-        pixterm -f "${1:-.}/"*.*(png|jpg|jpeg|JPG|JPEG|PNG|webp|gif)
-    }
-fi
+command -v pixterm > /dev/null && alias li='pixterm -fa'
 
 updaterc () {
     pwd="$(pwd)"
