@@ -38,11 +38,7 @@ else
     alias l='ls -lAh --color=auto'
 fi
 
-if command -v pixterm > /dev/null; then
-    li () {
-        pixterm -f "${1:-.}/"*.*(png|jpg|jpeg|JPG|JPEG|PNG|webp|gif)
-    }
-fi
+command -v pixterm > /dev/null && alias li='pixterm -fa'
 
 updaterc () {
     pwd="$(pwd)"
@@ -88,10 +84,13 @@ upd () {
     fi
     unset cargo_pkg_list
 
+    # Rust toolchains
+    command -v rustup > /dev/null && rustup update
+
     # Go on Debian
     if command -v godeb > /dev/null; then
-        [ "$(go version | grep -Po '\d+\.\d+\.\d+')" = "$(godeb list | tail -n 1)" ] || \
-            godeb install "$(godeb list | tail -n 1)"
+        [ "$(go version | grep -Po '\d+\.\d+\.\d+')" = "$(godeb list | grep -P '^\d+\.\d+\.\d+$' | tail -n 1)" ] || \
+            godeb install "$(godeb list | grep -P '^\d+\.\d+\.\d+$' | tail -n 1)"
     fi
 
     # dotfiles
