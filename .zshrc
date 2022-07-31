@@ -67,6 +67,6 @@ setopt extendedglob
 source ~/.config/aliasrc
 
 echo
-pfetch
+pixfetch
 
 [[ ! -f "${ZDOTDIR:-$HOME}/.p10k.zsh" ]] || source "${ZDOTDIR:-$HOME}/.p10k.zsh"
