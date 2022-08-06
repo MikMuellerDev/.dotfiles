@@ -7,6 +7,9 @@ alias rm='rm -v'
 alias ip='ip -c'
 alias cl='clear'
 
+# Laptop aliases
+alias mirrscreen='xrandr --output HDMI-1 --auto --same-as eDP-1'
+
 # SSH aliases
 alias sss='ssh cloud'
 alias ss8='ssh s8'
