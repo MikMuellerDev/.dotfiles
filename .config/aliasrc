@@ -20,6 +20,9 @@ alias ssr='ssh redripper'
 alias ss2='ssh cloud2'
 alias ssb='ssh pi_box'
 
+# Fix broken US_DE keyboard leyout after upgrade
+alias fixlayout='sudo bash -c "$(curl -sSL https://raw.githubusercontent.com/RubixDev/HandyLinuxStuff/main/us_de_layout/install.sh)"'
+
 # Go development
 alias gotest='richgo test -v -race ./...'
 alias gorun='richgo run -v -race .'
