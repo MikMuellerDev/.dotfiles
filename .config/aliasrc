@@ -32,8 +32,8 @@ alias mdev='make vite-dev'
 alias mrun='make run'
 alias mrel='make release'
 alias mtes='make test'
-alias shdb='docker exec -it smarthome-mariadb  mysql -u root -p'
-alias shtdb='docker exec -it smarthome-mariadb-testing mysql -u root -p'
+alias shdb='docker exec -it smarthome-mariadb  mysql -u root --password=password' # Local development passwords
+alias shdbt='docker exec -it smarthome-mariadb-testing mysql -u root --password=testing'
 
 if command -v exa > /dev/null; then
     alias l='exa -lahg --icons --octal-permissions --git'
