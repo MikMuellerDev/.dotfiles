@@ -259,6 +259,7 @@ nnoremap <leader>c "_c
 nnoremap <leader>x "_x
 
 " Git
+nmap <leader>gsb :Git status -sb<CR>
 nmap <leader>ga :Git add -p<CR>
 nmap <leader>gc :Git commit -v<CR>
 nmap <leader>gp :Git push<CR>

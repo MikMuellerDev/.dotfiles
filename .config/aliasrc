@@ -55,6 +55,19 @@ updaterc () {
     # Reload shell
     exec "$SHELL"
 }
+
+pushrc() {
+    pwd="$(pwd)"
+    cd ~/.dotfiles || {
+        echo 'The .dotfiles folder should be at ~/.dotfiles to push updates'
+        return 2
+    }
+    git push
+    cd "$pwd" || return 2
+    # Reload shell
+    exec "$SHELL"
+}
+
 editrc () {
     [ -d "$HOME/.dotfiles" ] || {
         echo 'No .dotfiles folder at ~/.dotfiles'
