@@ -152,7 +152,7 @@ install_debian () {
     sudo apt update
     sudo apt install -y zsh git curl wget || exit 2
 
-    if prompt "Install VIM enhancements and languages?"; then
+    if promptn "Install VIM enhancements and languages?"; then
         sudo apt install -y shellcheck nodejs npm fzf || exit 2
 
         command -v go > /dev/null || {
@@ -181,7 +181,6 @@ install_debian () {
             sudo chmod +x /usr/local/bin/pfetch
         fi
     fi
-
 
     if ! command -v nvim > /dev/null; then
         wget 'https://github.com/neovim/neovim/releases/download/v0.7.0/nvim-linux64.deb' || exit 2
