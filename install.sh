@@ -150,27 +150,38 @@ install_debian () {
     want_deps || return
 
     sudo apt update
-    sudo apt install -y zsh fzf git curl wget shellcheck nodejs npm || exit 2
+    sudo apt install -y zsh git curl wget || exit 2
 
-    command -v go > /dev/null || {
-        sudo apt install -y golang || exit 2
-        go get gopkg.in/niemeyer/godeb.v1/cmd/godeb || exit 2
-        sudo apt remove -y golang || exit 2
-        sudo apt autoremove -y || exit 2
-        godeb install "$(godeb list | tail -n 1)" || exit 2
-    }
+    if prompt "Install VIM enhancements and languages?"; then
+        sudo apt install -y shellcheck nodejs npm fzf || exit 2
 
-    command -v lf > /dev/null || {
-        env CGO_ENABLED=0 go install -ldflags="-s -w" github.com/gokcehan/lf@latest
-    }
+        command -v go > /dev/null || {
+            sudo apt install -y golang || exit 2
+            go get gopkg.in/niemeyer/godeb.v1/cmd/godeb || exit 2
+            sudo apt remove -y golang || exit 2
+            sudo apt autoremove -y || exit 2
+            godeb install "$(godeb list | tail -n 1)" || exit 2
+        }
 
-    if ! command -v rustup > /dev/null; then
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-        exec "$SHELL"
+        command -v lf > /dev/null || {
+            env CGO_ENABLED=0 go install -ldflags="-s -w" github.com/gokcehan/lf@latest
+        }
+
+        if ! command -v rustup > /dev/null; then
+            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+            exec "$SHELL"
+        fi
+
+        rustup default > /dev/null 2>&1 || { rustup default stable || exit 2; }
+        cargo install fd-find ripgrep proximity-sort onefetch pixterm autojump || exit 2
+
+
+        if ! command -v pfetch > /dev/null; then
+            sudo curl 'https://raw.githubusercontent.com/dylanaraps/pfetch/master/pfetch' -o /usr/local/bin/pfetch
+            sudo chmod +x /usr/local/bin/pfetch
+        fi
     fi
 
-    rustup default > /dev/null 2>&1 || { rustup default stable || exit 2; }
-    cargo install fd-find ripgrep proximity-sort onefetch pixterm autojump || exit 2
 
     if ! command -v nvim > /dev/null; then
         wget 'https://github.com/neovim/neovim/releases/download/v0.7.0/nvim-linux64.deb' || exit 2
@@ -181,10 +192,6 @@ install_debian () {
     sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
-    if ! command -v pfetch > /dev/null; then
-        sudo curl 'https://raw.githubusercontent.com/dylanaraps/pfetch/master/pfetch' -o /usr/local/bin/pfetch
-        sudo chmod +x /usr/local/bin/pfetch
-    fi
 
     if [ "$(basename "$SHELL")" != "zsh" ]; then
         sudo chsh -s "$(which zsh)" "$USER"
