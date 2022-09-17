@@ -25,7 +25,7 @@ max_width = 10
 #color_override = 2
 
 # Path to a custom image to be used instead
-image_override = "~/Pictures/icon2.png"
+image_override = "~/.dotfiles/icon.png"
 
 # A list of infos to exclusively show
 #info_whitelist = [
