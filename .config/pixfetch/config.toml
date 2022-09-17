@@ -1,6 +1,6 @@
 # The maximum width in pixels of the image
 # - Must be an integer between 5 and 50
-max_width = 15
+max_width = 10
 
 # The minimum alpha value for pixels to be displayed
 # - Must be an integer between 0 and 255
@@ -25,7 +25,7 @@ max_width = 15
 #color_override = 2
 
 # Path to a custom image to be used instead
-#image_override = "~/Pictures/logo.png"
+image_override = "~/Pictures/icon2.png"
 
 # A list of infos to exclusively show
 #info_whitelist = [
@@ -49,7 +49,7 @@ max_width = 15
 # A list of infos to not show
 info_blacklist = [
 #    "UserAtHostname",
-#    "OS",
+    "OS",
 #    "Host",
 #    "Kernel",
 #    "Uptime",
@@ -57,10 +57,10 @@ info_blacklist = [
     "Shell",
     "Terminal", # takes by far the longest to fetch
 #    "CPU",
-    "Memory",
-    "Swap",
+#    "Memory",
+#    "Swap",
     "Battery",
-    "Seperator",
+#    "Seperator",
     "Colors1",
     "Colors2",
 ]
