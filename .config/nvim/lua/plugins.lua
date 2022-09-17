@@ -69,6 +69,7 @@ return require('packer').startup(function(use)
     use 'sheerun/vim-polyglot'
     use 'evanleck/vim-svelte'
     use 'averms/ebnf-vim'
+    use 'MikMuellerDev/vim-homescript'
     use { 'frabjous/knap', disable = vim.g.is_android == 1 }
 
     -- LSP setup

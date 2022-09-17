@@ -138,7 +138,7 @@ install_arch () {
     fi
 
     $aur -Sy --needed --noconfirm base-devel fd ripgrep neovim zsh rustup fzf git curl wget \
-        shellcheck pfetch-git neovim-plug nodejs npm exa bat tmux onefetch lf go \
+        shellcheck pfetch-git nvim-packer-git nodejs npm exa bat tmux onefetch lf go \
         || [ "$is_root" = true ] || exit 2
     rustup default > /dev/null 2>&1 || { rustup default stable || exit 2; }
     $aur -S --needed --noconfirm proximity-sort  autojump-rs pixterm-rust pixfetch || [ "$is_root" = true ] || exit 2
@@ -223,8 +223,9 @@ install_debian () {
         sudo curl 'https://raw.githubusercontent.com/dylanaraps/pfetch/master/pfetch' -o /usr/local/bin/pfetch
         sudo chmod +x /usr/local/bin/pfetch
     fi
-    sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+
+    git clone --depth 1 https://github.com/wbthomason/packer.nvim \
+        "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/pack/packer/start/packer.nvim"
 
 
     if ! command -v pixfetch > /dev/null; then
@@ -315,6 +316,7 @@ install_file .config/npm/npmrc
 install_file .config/python/pythonrc
 install_file .config/bpython/config
 install_file .config/pixfetch/config.toml
+
 if [ "$is_desktop" = true ]; then
     install_file .config/alacritty/alacritty.yml
     install_file .config/bspwm/bspwmrc
