@@ -3,6 +3,11 @@
 alias tmux='tmux -2'
 alias cp='cp -iv'
 alias mv='mv -iv'
+
+space2under() {
+    for f in *; do mv "$f" "${f// /_}"; done
+}
+
 alias rm='rm -v'
 alias ip='ip -c'
 alias cl='clear'
