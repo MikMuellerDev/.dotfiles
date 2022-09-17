@@ -24,6 +24,79 @@ let g:is_android = executable('uname') && system('uname -o') == "Android\n"
 
 " Plugins
 lua require('plugins')
+call plug#begin()
+
+" Theme
+Plug 'rakr/vim-one'
+
+" VIM enhancements
+Plug 'editorconfig/editorconfig-vim'
+Plug 'max397574/better-escape.nvim'
+Plug 'andymass/vim-matchup'
+Plug 'jiangmiao/auto-pairs'
+Plug 'tpope/vim-abolish'
+
+" GUI enhancements
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'lukas-reineke/indent-blankline.nvim'
+
+" Fuzzy Finder
+Plug 'airblade/vim-rooter'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
+" Language support
+Plug 'cespare/vim-toml'
+Plug 'stephpy/vim-yaml'
+Plug 'rust-lang/rust.vim'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'godlygeek/tabular'
+Plug 'preservim/vim-markdown'
+Plug 'evanleck/vim-svelte'
+Plug 'pangloss/vim-javascript'
+Plug 'HerringtonDarkholme/yats.vim'
+Plug 'Shougo/context_filetype.vim'
+Plug 'sheerun/vim-polyglot'
+Plug 'MikMuellerDev/vim-homescript'
+
+" LSP setup
+Plug 'neovim/nvim-lspconfig'
+Plug 'williamboman/nvim-lsp-installer'
+Plug 'nvim-lua/lsp_extensions.nvim'
+Plug 'ray-x/lsp_signature.nvim'
+Plug 'habamax/vim-godot'
+
+" Completion
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
+
+" Discord presence
+Plug 'andweeb/presence.nvim'
+
+" Only because nvim-cmp _requires_ snippets
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
+
+" Git
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+
+" Markdown preview
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
+Plug 'ellisonleao/glow.nvim', {'branch': 'main'}
+
+call plug#end()
+
+" Automatically install missing plugins
+autocmd VimEnter *
+    \  if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+    \|   PlugInstall --sync | q
+    \| endif
 
 " Theming
 syntax on
@@ -192,6 +265,7 @@ nnoremap <leader>D "_D
 nnoremap <leader>C "_C
 
 " Git
+nmap <leader>gsb :Git status -sb<CR>
 nmap <leader>ga :Git add -p<CR>
 nmap <leader>gc :Git commit -v<CR>
 nmap <leader>gp :Git push<CR>
@@ -265,8 +339,8 @@ let g:ft = ''
 
 " Svelte ts and scss syntax highlighting
 let g:svelte_preprocessor_tags = [
-\ { 'name': 'ts', 'tag': 'script', 'as': 'typescript' }
-\ ]
+  \ { 'name': 'ts', 'tag': 'script', 'as': 'typescript' }
+  \ ]
 let g:svelte_preprocessors = ['ts', 'scss']
 
 " Enable type inlay hints in rust

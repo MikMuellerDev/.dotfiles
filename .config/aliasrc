@@ -5,11 +5,29 @@ alias cp='cp -iv'
 alias mv='mv -iv'
 alias rm='rm -v'
 alias ip='ip -c'
+alias cl='clear'
+
+# Laptop aliases
+alias mirrscreen='xrandr --output HDMI-1 --auto --same-as eDP-1'
+
+# SSH aliases
+alias sss='ssh cloud'
+
+# Fix broken US_DE keyboard leyout after upgrade
+alias fixlayout='sudo bash -c "$(curl -sSL https://raw.githubusercontent.com/RubixDev/HandyLinuxStuff/main/us_de_layout/install.sh)"'
+
+# Smarthome development
+alias mdev='make vite-dev'
+alias mrun='make run'
+alias shdb='docker exec -it smarthome-mariadb  mysql -u root --password=password -D smarthome' # Local development passwords
+alias shdbt='docker exec -it smarthome-mariadb-testing mysql -u root --password=testing -D smarthome'
+
 if command -v exa > /dev/null; then
     alias l='exa -lahg --icons --octal-permissions --git'
 else
     alias l='ls -lAh --color=auto'
 fi
+
 command -v pixterm > /dev/null && alias li='pixterm -fa'
 
 updaterc () {
@@ -24,6 +42,19 @@ updaterc () {
     # Reload shell
     exec "$SHELL"
 }
+
+pushrc() {
+    pwd="$(pwd)"
+    cd ~/.dotfiles || {
+        echo 'The .dotfiles folder should be at ~/.dotfiles to push updates'
+        return 2
+    }
+    git push
+    cd "$pwd" || return 2
+    # Reload shell
+    exec "$SHELL"
+}
+
 editrc () {
     [ -d "$HOME/.dotfiles" ] || {
         echo 'No .dotfiles folder at ~/.dotfiles'
@@ -83,10 +114,9 @@ command -v wl-copy >/dev/null && { alias setclip='wl-copy'; alias getclip='wl-pa
 
 alias root='sudo su -'
 alias con='ssh contabo'
-alias poof='poweroff'
+command -v poof > /dev/null || alias poof='poweroff'
 alias pubip='curl ipinfo.io/ip'
 alias ipa='ip -br a'
-alias occ='sudo docker exec -u www-data -it nextcloud php occ'
 alias sctl='sudo systemctl'
 alias sr='screen -r'
 alias sls='screen -ls'
@@ -135,6 +165,7 @@ alias wg1='sudo systemctl stop wg-quick@wg0; sudo systemctl start wg-quick@wg1'
 alias stopwg='sudo systemctl stop wg-quick@wg0; sudo systemctl stop wg-quick@wg1'
 
 cheat () { curl -s "cheat.sh/$1" | less; }
+
 colors () {
     zsh -c '
     for i in {0..255}; do
@@ -142,47 +173,11 @@ colors () {
     done'
 }
 
-us_de () {
-    sudo bash -c "$(curl -sSL https://raw.githubusercontent.com/RubixDev/HandyLinuxStuff/main/us_de_layout/install.sh)"
+
+postclip () {
+    getclip | quick-clip set -i
 }
 
-postclip () { curl -sSL https://clip.rubixdev.de/index.php -F data="$1" -o /dev/null; }
-alias fetchclip='curl -sSL https://clip.rubixdev.de/clipboard.txt'
-
-findfont () {
-    [ -n "$1" ] || {
-        echo "Please specify a symbol to search for"
-        return 1
-    }
-    python -c "import os
-
-fonts = []
-
-def add_fonts(directory):
-    if not os.path.isdir(directory): return
-    for root,dirs,files in os.walk(directory):
-        for file in files:
-            if file.endswith('.ttf'): fonts.append(os.path.join(root,file))
-
-add_fonts('/usr/share/fonts/')
-add_fonts('$HOME/.local/share/fonts/')
-add_fonts('$HOME/.fonts/')
-
-
-from fontTools.ttLib import TTFont
-
-def char_in_font(unicode_char, font):
-    for cmap in font['cmap'].tables:
-        if cmap.isUnicode():
-            if ord(unicode_char) in cmap.cmap:
-                return True
-    return False
-
-def test(char):
-    for fontpath in fonts:
-        font = TTFont(fontpath)   # specify the path to the font in question
-        if char_in_font(char, font):
-            print(char + ' in ' + fontpath)
-
-test('$1')"
+fetchclip () {
+    quick-clip get -o | setclip
 }
