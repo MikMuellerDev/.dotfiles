@@ -138,7 +138,7 @@ install_arch () {
     fi
 
     $aur -Sy --needed --noconfirm base-devel fd ripgrep neovim zsh rustup fzf git curl wget \
-        shellcheck pfetch-git nvim-packer-git nodejs npm exa bat tmux onefetch lf go \
+        shellcheck pfetch-git nvim-packer-git neovim-plug nodejs npm exa bat tmux onefetch lf go \
         || [ "$is_root" = true ] || exit 2
     rustup default > /dev/null 2>&1 || { rustup default stable || exit 2; }
     $aur -S --needed --noconfirm proximity-sort  autojump-rs pixterm-rust pixfetch || [ "$is_root" = true ] || exit 2
@@ -227,6 +227,8 @@ install_debian () {
     git clone --depth 1 https://github.com/wbthomason/packer.nvim \
         "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/pack/packer/start/packer.nvim"
 
+    sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
     if ! command -v pixfetch > /dev/null; then
         version=1.0.0
