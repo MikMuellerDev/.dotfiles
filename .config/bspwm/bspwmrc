@@ -44,6 +44,6 @@ pgrep -x polybar > /dev/null || GIT_USERNAME=$(git config user.name) polybar -r 
 
 setxkbmap -layout 'us(us_de),de'
 setxkbmap -option 'grp:rctrl_toggle'
-# setxkbmap -option 'ctrl:nocaps'
+setxkbmap -option 'ctrl:nocaps'
 numlockx on
 xsetroot -cursor_name left_ptr &
