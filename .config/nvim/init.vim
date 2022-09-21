@@ -24,9 +24,6 @@ let g:is_android = executable('uname') && system('uname -o') == "Android\n"
 
 " Plugins
 lua require('plugins')
-call plug#begin()
-    Plug 'MikMuellerDev/vim-homescript'
-call plug#end()
 
 " Theming
 syntax on
