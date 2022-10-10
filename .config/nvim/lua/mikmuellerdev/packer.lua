@@ -27,7 +27,10 @@ return require('packer').startup {
         use { 'navarasu/onedark.nvim' }
 
         -- VIM enhancements
-        use { 'max397574/better-escape.nvim' }
+        use {
+            'max397574/better-escape.nvim',
+            config = function () require("mikmuellerdev.plugin.better_escape")  end,
+        }
         use { 'editorconfig/editorconfig-vim' }
         use { 'andymass/vim-matchup' }
         use {
