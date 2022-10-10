@@ -27,6 +27,7 @@ return require('packer').startup {
         use { 'navarasu/onedark.nvim' }
 
         -- VIM enhancements
+        use { 'max397574/better-escape.nvim' }
         use { 'editorconfig/editorconfig-vim' }
         use { 'andymass/vim-matchup' }
         use {
@@ -89,7 +90,7 @@ return require('packer').startup {
             config = function() require('mikmuellerdev.plugin.markdown') end,
         }
         use { 'baskerville/vim-sxhkdrc' }
-        use 'MikMuellerDev/vim-homescript'
+        use { 'MikMuellerDev/vim-homescript' }
         use {
             'saecki/crates.nvim',
             requires = { 'nvim-lua/plenary.nvim' },
