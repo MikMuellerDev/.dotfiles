@@ -81,7 +81,7 @@ install_android () {
     pkg update -y
     pkg install -y ripgrep fd neovim zsh rust fzf git onefetch curl wget shellcheck \
         nodejs exa bat tmux lf python || exit 2
-    cargo install proximity-sort pixterm || exit 2
+    cargo install pixterm dprint || exit 2
 
     if [ "$(basename "$SHELL")" != "zsh" ]; then
         chsh -s zsh
@@ -138,10 +138,11 @@ install_arch () {
     fi
 
     $aur -Sy --needed --noconfirm base-devel fd ripgrep neovim zsh rustup fzf git curl wget \
-        shellcheck pfetch-git nvim-packer-git neovim-plug nodejs npm exa bat tmux onefetch lf go \
+        shellcheck pfetch-git nodejs npm exa bat tmux onefetch lf go dprint \
         || [ "$is_root" = true ] || exit 2
     rustup default > /dev/null 2>&1 || { rustup default stable || exit 2; }
-    $aur -S --needed --noconfirm proximity-sort  autojump-rs pixterm-rust pixfetch || [ "$is_root" = true ] || exit 2
+    $aur -S --needed --noconfirm pixterm-rust autojump-rs pixfetch \
+        || [ "$is_root" = true ] || exit 2
 
     if [ "$(basename "$SHELL")" != "zsh" ]; then
         sudo chsh -s "$(which zsh)" "$USER"
@@ -150,10 +151,10 @@ install_arch () {
     if [ "$is_desktop" = true ]; then
         $aur -S --needed --noconfirm polybar sway-launcher-desktop bspwm sxhkd dunst \
             alacritty picom nitrogen numlockx slock neovim-remote ly \
-            ttf-meslo-nerd-font-powerlevel10k ttf-jetbrains-mono xorg xcursor-breeze \
-            kvantum-theme-orchis-git orchis-theme-git kvantum qt5ct ttf-dejavu ttf-liberation \
-            noto-fonts-cjk noto-fonts-emoji noto-fonts-extra tela-icon-theme-green-git \
-            network-manager-applet xcolor maim xsct xclip yarn rtkit lxqt-policykit || exit 2
+            nerd-fonts-jetbrains-mono ttf-jetbrains-mono xorg xcursor-breeze \
+            kvantum-theme-orchis-git orchis-gtk-theme-git kvantum qt5ct ttf-dejavu ttf-liberation \
+            noto-fonts-cjk noto-fonts-emoji noto-fonts-extra tela-icon-theme-purple-git \
+            network-manager-applet xcolor maim xsct xclip yarn rtkit lxqt-policykit smarthome-commander smarthome-cli || exit 2
         [ "$is_laptop" = true ] && { $aur -S --needed --noconfirm brightnessctl pamixer || exit 2; }
 
         # ----- KEYBOARD LAYOUT -----
@@ -180,41 +181,29 @@ install_debian () {
     want_deps || return
 
     sudo apt update
+    sudo apt install -y zsh fzf git curl wget shellcheck nodejs npm autojump python3-venv || exit 2
 
-    sudo apt install -y zsh git curl wget || exit 2
+    command -v go > /dev/null || {
+        sudo apt install -y golang || exit 2
+        go get gopkg.in/niemeyer/godeb.v1/cmd/godeb || exit 2
+        sudo apt remove -y golang || exit 2
+        sudo apt autoremove -y || exit 2
+        godeb install "$(godeb list | tail -n 1)" || exit 2
+    }
 
-    if promptn "Install VIM enhancements and languages?"; then
-        sudo apt install -y shellcheck nodejs npm fzf || exit 2
+    command -v lf > /dev/null || {
+        env CGO_ENABLED=0 go install -ldflags="-s -w" github.com/gokcehan/lf@latest
+    }
 
-        command -v go > /dev/null || {
-            sudo apt install -y golang || exit 2
-            go get gopkg.in/niemeyer/godeb.v1/cmd/godeb || exit 2
-            sudo apt remove -y golang || exit 2
-            sudo apt autoremove -y || exit 2
-            godeb install "$(godeb list | tail -n 1)" || exit 2
-        }
-
-        command -v lf > /dev/null || {
-            env CGO_ENABLED=0 go install -ldflags="-s -w" github.com/gokcehan/lf@latest
-        }
-
-        if ! command -v rustup > /dev/null; then
-            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-            exec "$SHELL"
-        fi
-
-        rustup default > /dev/null 2>&1 || { rustup default stable || exit 2; }
-        cargo install fd-find ripgrep proximity-sort onefetch pixterm autojump || exit 2
-
-
-        if ! command -v pfetch > /dev/null; then
-            sudo curl 'https://raw.githubusercontent.com/dylanaraps/pfetch/master/pfetch' -o /usr/local/bin/pfetch
-            sudo chmod +x /usr/local/bin/pfetch
-        fi
+    if ! command -v rustup > /dev/null; then
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
     fi
 
+    rustup default > /dev/null 2>&1 || { rustup default stable || exit 2; }
+    cargo install fd-find ripgrep onefetch pixterm autojump tree-sitter-cli bat dprint exa || exit 2
+
     if ! command -v nvim > /dev/null; then
-        wget 'https://github.com/neovim/neovim/releases/download/v0.7.0/nvim-linux64.deb' || exit 2
+        wget 'https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.deb' || exit 2
         sudo apt install ./nvim-linux64.deb
         rm ./nvim-linux64.deb
     fi
@@ -223,12 +212,6 @@ install_debian () {
         sudo curl 'https://raw.githubusercontent.com/dylanaraps/pfetch/master/pfetch' -o /usr/local/bin/pfetch
         sudo chmod +x /usr/local/bin/pfetch
     fi
-
-    git clone --depth 1 https://github.com/wbthomason/packer.nvim \
-        "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/pack/packer/start/packer.nvim"
-
-    sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
     if ! command -v pixfetch > /dev/null; then
         version=1.0.0
@@ -287,7 +270,7 @@ install_zsh_custom themes romkatv powerlevel10k
 }
 
 ########### dotfiles Installation ###########
-install_file () {
+link () {
     src="$1"
     if [ -n "$2" ]; then
         dest="$2"
@@ -305,38 +288,39 @@ install_file () {
 [ -e ~/.SpaceVim ] && curl -sLf https://spacevim.org/install.sh | bash -s -- --uninstall
 
 # Create symlinks
-install_file .zshrc "${ZDOTDIR:-$HOME}/.zshrc"
-install_file .p10k.zsh "${ZDOTDIR:-$HOME}/.p10k.zsh"
-install_file .bashrc
-install_file .config/env
-install_file .config/aliasrc
-install_file .config/tmux/tmux.conf
-install_file .config/nvim/init.vim
-install_file .config/nvim/lua/plugins.lua
-install_file .config/paru/paru.conf
-install_file .config/npm/npmrc
-install_file .config/python/pythonrc
-install_file .config/bpython/config
-install_file .config/pixfetch/config.toml
-
+link .zshrc "${ZDOTDIR:-$HOME}/.zshrc"
+link .p10k.zsh "${ZDOTDIR:-$HOME}/.p10k.zsh"
+link .bashrc
+link .config/env
+link .config/aliasrc
+link .config/tmux/tmux.conf
+link .config/nvim/init.vim
+link .config/nvim/lua
+link .config/nvim/queries
+link .config/paru/paru.conf
+link .config/npm/npmrc
+link .config/python/pythonrc
+link .config/bpython/config
+link .config/pixfetch/config.toml
+link .config/dprint
 if [ "$is_desktop" = true ]; then
-    install_file .config/alacritty/alacritty.yml
-    install_file .config/bspwm/bspwmrc
-    install_file .config/sxhkd/sxhkdrc
-    install_file .config/dunst/dunstrc
-    install_file .config/picom.conf
-    install_file .config/polybar/config.ini
-    install_file .gtkrc-2.0 "${GTK2_RC_FILES:-$HOME/.gtkrc-2.0}"
-    install_file .config/gtk-3.0/settings.ini
-    install_file .config/qt5ct/qt5ct.conf
-    install_file .icons/default/index.theme
-    install_file .config/Kvantum/kvantum.kvconfig
-    install_file .config/BetterDiscord/themes/SimplyTransparent.theme.css
+    link .config/alacritty/alacritty.yml
+    link .config/bspwm/bspwmrc
+    link .config/sxhkd/sxhkdrc
+    link .config/dunst/dunstrc
+    link .config/picom.conf
+    link .config/polybar/config.ini
+    link .gtkrc-2.0 "${GTK2_RC_FILES:-$HOME/.gtkrc-2.0}"
+    link .config/gtk-3.0/settings.ini
+    link .config/qt5ct/qt5ct.conf
+    link .icons/default/index.theme
+    link .config/Kvantum/kvantum.kvconfig
+    link .config/BetterDiscord/themes/SimplyTransparent.theme.css
 
     # XDG-MIME default apps
-    install_file .config/mimeapps.list
-    install_file .local/share/applications/lf.desktop
-    install_file .local/share/applications/nsxiv.desktop
-    install_file .local/share/applications/nvim.desktop
-    install_file .local/share/applications/zathura.desktop
+    link .config/mimeapps.list
+    link .local/share/applications/lf.desktop
+    link .local/share/applications/nsxiv.desktop
+    link .local/share/applications/nvim.desktop
+    link .local/share/applications/zathura.desktop
 fi
