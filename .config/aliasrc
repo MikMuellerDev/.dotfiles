@@ -34,7 +34,8 @@ alias pubip='curl ipinfo.io/ip'
 alias ipa='ip -br a'
 
 # Laptop aliases
-alias mirrscreen='xrandr --output HDMI-1 --auto --same-as eDP-1'
+alias mirrscreen='xrandr --output HDMI-1 --auto --scale-from 1920x1080 --same-as eDP-1'
+alias lsscreen='xrandr --listactivemonitors'
 
 # Pixterm
 command -v pixterm > /dev/null && alias li='pixterm -fa'
