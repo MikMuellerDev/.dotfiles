@@ -1,0 +1,229 @@
+#!/bin/bash
+
+alias tmux='tmux -2'
+alias root='sudo su -'
+alias sr='screen -r'
+alias sls='screen -ls'
+alias cp='cp -iv'
+alias mv='mv -iv'
+alias rm='rm -v'
+alias ip='ip -c'
+alias sctl='sudo systemctl'
+
+
+# Development aliases
+alias mdev='make vite-dev'
+alias mrun='make run'
+alias shdb='docker exec -it smarthome-mariadb  mysql -u root --password=password -D smarthome'
+alias shdbt='docker exec -it smarthome-mariadb-testing mysql -u root --password=testing -D smarthome'
+alias maketex='latexmk -xelatex -pdfxe -halt-on-error'
+alias dprinit='cp ~/.config/dprint/dprint.json dprint.json'
+alias dprintg='dprint --config $XDG_CONFIG_HOME/dprint/dprint.json'
+
+# Fix broken US_DE keyboard leyout after upgrade
+alias fixlayout='sudo bash -c "$(curl -sSL https://raw.githubusercontent.com/RubixDev/HandyLinuxStuff/main/us_de_layout/install.sh)"'
+
+# SSH aliases
+alias sss='ssh cloud'
+alias con='ssh contabo'
+
+# IP aliases
+alias pubip='curl ipinfo.io/ip'
+alias ipa='ip -br a'
+
+# Laptop aliases
+alias mirrscreen='xrandr --output HDMI-1 --auto --same-as eDP-1'
+
+# Pixterm
+command -v pixterm > /dev/null && alias li='pixterm -fa'
+
+# Only setup the poof alias if the poof binary does not exist
+command -v poof > /dev/null || alias poof='poweroff'
+
+# LS configuration
+if command -v exa > /dev/null; then
+    alias l='exa -lahg --icons --octal-permissions --git'
+else
+    alias l='ls -lAh --color=auto'
+fi
+
+space2under() {
+    for f in *; do mv "$f" "${f// /_}"; done
+}
+
+# Wireguard aliases
+rewg () {
+    systemctl is-active wg-quick@wg0 > /dev/null && {
+        sudo systemctl restart wg-quick@wg0
+        return 0
+    }
+    systemctl is-active wg-quick@wg1 > /dev/null && {
+        sudo systemctl restart wg-quick@wg1
+        return 0
+    }
+    echo "No known wg service is running"
+    return 3
+}
+alias wg0='sudo systemctl stop wg-quick@wg1; sudo systemctl start wg-quick@wg0'
+alias wg1='sudo systemctl stop wg-quick@wg0; sudo systemctl start wg-quick@wg1'
+alias stopwg='sudo systemctl stop wg-quick@wg0; sudo systemctl stop wg-quick@wg1'
+
+# Dotfiles aliases
+updaterc () {
+    pwd="$(pwd)"
+    cd ~/.dotfiles || {
+        echo 'The .dotfiles folder should be at ~/.dotfiles to auto update'
+        return 2
+    }
+    git pull
+    ./install.sh --only-link
+    cd "$pwd" || return 2
+    # Reload shell
+    exec "$SHELL"
+}
+editrc () {
+    [ -d "$HOME/.dotfiles" ] || {
+        echo 'No .dotfiles folder at ~/.dotfiles'
+        return 2
+    }
+    ${EDITOR:-nvim} ~/.dotfiles/.zshrc
+}
+upd () {
+    # Package manager
+    pwd="$(pwd)"
+    if [ "$(uname -o)" = "Android" ]; then
+        pkg upgrade
+    elif command -v apt > /dev/null; then
+        sudo apt update
+        sudo apt upgrade
+        sudo apt autoremove
+        sudo apt autoclean
+    else
+        paru -Syu
+    fi
+
+    # Cargo packages
+    cargo_pkg_list=()
+    while IFS='' read -r line; do cargo_pkg_list+=("$line"); done < <(cargo install --list | grep -E '^[a-z0-9_-]+ v[0-9.]+:$' | cut -f1 -d' ')
+    if [ "${#cargo_pkg_list[@]}" -ne 0 ]; then
+        cargo install "${cargo_pkg_list[@]}"
+    fi
+    unset cargo_pkg_list
+
+    # Rust toolchains
+    command -v rustup > /dev/null && rustup update
+
+    # Go on Debian
+    if command -v godeb > /dev/null; then
+        [ "$(go version | grep -Po '\d+\.\d+\.\d+')" = "$(godeb list | grep -P '^\d+\.\d+\.\d+$' | tail -n 1)" ] || \
+            godeb install "$(godeb list | grep -P '^\d+\.\d+\.\d+$' | tail -n 1)"
+    fi
+
+    # Oh-my-zsh plugins and themes
+    pwd="$(pwd)"
+    for d in "$ZSH_CUSTOM"/*/*; do
+        [ ! -d "$d" ] || cd "$d" || return 2
+        git pull
+    done
+    cd "$pwd" || return 2
+
+    # Neovim plugins and packages
+    nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+    nvim --headless -c 'autocmd User MasonUpdateAllComplete quitall' -c 'MasonUpdateAll'
+
+    # Flatpaks
+    command -v flatpak && flatpak update
+
+    # Global npm packages
+    npm update --global
+
+    # dotfiles
+    updaterc
+}
+pushrc() {
+     pwd="$(pwd)"
+     cd ~/.dotfiles || {
+         echo 'The .dotfiles folder should be at ~/.dotfiles to push updates'
+         return 2
+     }
+     git push
+     cd "$pwd" || return 2
+     # Reload shell
+     exec "$SHELL"
+}
+
+command -v xclip >/dev/null && { alias setclip='xclip -selection c'; alias getclip='xclip -selection c -o'; }
+command -v wl-copy >/dev/null && { alias setclip='wl-copy'; alias getclip='wl-paste'; }
+
+_paru_bin="$(command -v paru)"
+paru () {
+    (
+        unset CARGO_TARGET_DIR
+        unset GOPATH
+        $_paru_bin "$@"
+    )
+}
+
+godotvim () {
+    [ "$(basename "$(pwd)")" = "src" ] || cd src || return 1
+    [ -e godothost ] && rm godothost > /dev/null
+    nvim --listen godothost .
+    [ -e godothost ] && rm godothost > /dev/null
+}
+
+lfcd () {
+    tmp="$(mktemp -uq)"
+    trap 'rm -f $tmp >/dev/null 2>&1' HUP INT QUIT TERM PWR EXIT
+    lf -last-dir-path="$tmp" "$@"
+    if [ -f "$tmp" ]; then
+        dir="$(cat "$tmp")"
+        # shellcheck disable=SC2164
+        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+    fi
+}
+
+cheat () { curl -s "cheat.sh/$1" | less; }
+colors () {
+    zsh -c '
+    for i in {0..255}; do
+        print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'"'"'\n'"'"'}
+    done'
+}
+
+findfont () {
+    [ -n "$1" ] || {
+        echo "Please specify a symbol to search for"
+        return 1
+    }
+    python -c "import os
+
+fonts = []
+
+def add_fonts(directory):
+    if not os.path.isdir(directory): return
+    for root,dirs,files in os.walk(directory):
+        for file in files:
+            if file.endswith('.ttf'): fonts.append(os.path.join(root,file))
+
+add_fonts('/usr/share/fonts/')
+add_fonts('$HOME/.local/share/fonts/')
+add_fonts('$HOME/.fonts/')
+
+
+from fontTools.ttLib import TTFont
+
+def char_in_font(unicode_char, font):
+    for cmap in font['cmap'].tables:
+        if cmap.isUnicode():
+            if ord(unicode_char) in cmap.cmap:
+                return True
+    return False
+
+def test(char):
+    for fontpath in fonts:
+        font = TTFont(fontpath)   # specify the path to the font in question
+        if char_in_font(char, font):
+            print(char + ' in ' + fontpath)
+
+test('$1')"
+}
