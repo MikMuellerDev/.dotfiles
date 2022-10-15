@@ -118,7 +118,7 @@ return require('packer').startup {
             'williamboman/mason.nvim',
             'williamboman/mason-lspconfig.nvim',
             'jayp0521/mason-null-ls.nvim',
-            'mikmuellerdev/mason-update-all',
+            'RubixDev/mason-update-all',
         }
         use { 'ray-x/lsp_signature.nvim' }
         use { 'habamax/vim-godot', disable = _G.is_android }
