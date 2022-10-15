@@ -3,14 +3,14 @@
 alias tmux='tmux -2'
 alias cp='cp -iv'
 alias mv='mv -iv'
+alias rm='rm -v'
+alias ip='ip -c'
+alias cl='clear'
+alias mdl='yt-dlp --extract-audio --audio-format=mp3 --embed-thumbnail'
 
 space2under() {
     for f in *; do mv "$f" "${f// /_}"; done
 }
-
-alias rm='rm -v'
-alias ip='ip -c'
-alias cl='clear'
 
 # Laptop aliases
 alias mirrscreen='xrandr --output HDMI-1 --auto --same-as eDP-1'
