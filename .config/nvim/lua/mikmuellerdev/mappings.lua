@@ -3,6 +3,8 @@ local map = vim.keymap.set
 
 -- Replace all with Shift+S
 map('n', 'S', ':%s//g<left><left>')
+-- Replace string in line with Shift+L
+map('n', 'm', ':s//g<left><left>')
 
 -- Search results centered please
 map('n', 'n', 'nzz', { silent = true })
