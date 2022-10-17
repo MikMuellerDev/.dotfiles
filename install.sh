@@ -137,7 +137,7 @@ install_arch () {
         aur=paru
     fi
 
-    $aur -Sy --needed --noconfirm base-devel fd ripgrep neovim zsh rustup fzf git curl wget \
+    $aur -Sy --needed --noconfirm base-devel fd ripgrep neovim zsh rustup fzf git curl wget rsync ncdu \
         shellcheck pfetch-git nodejs npm exa bat tmux onefetch lf go dprint \
         || [ "$is_root" = true ] || exit 2
     rustup default > /dev/null 2>&1 || { rustup default stable || exit 2; }
@@ -181,7 +181,7 @@ install_debian () {
     want_deps || return
 
     sudo apt update
-    sudo apt install -y zsh fzf git curl wget shellcheck nodejs npm autojump python3-venv || exit 2
+    sudo apt install -y zsh fzf git curl wget shellcheck nodejs npm autojump python3-venv rsync ncdu || exit 2
 
     command -v go > /dev/null || {
         sudo apt install -y golang || exit 2

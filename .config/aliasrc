@@ -10,6 +10,7 @@ alias rm='rm -v'
 alias ip='ip -c'
 alias cl='clear'
 alias sctl='sudo systemctl'
+alias cr='rsync -ravzp'
 
 # shellcheck disable=SC2139
 alias wget="wget --hsts-file='$XDG_DATA_HOME/wget-hsts'"
