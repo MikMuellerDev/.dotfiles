@@ -111,7 +111,7 @@ return require('packer').startup {
 
         -- LSP setup
         use {
-            'neovim/nvim-lspconfig',
+            '/home/mik/Downloads/lsp/nvim-lspconfig',
             config = function() require('mikmuellerdev.lsp') end,
         }
         use {

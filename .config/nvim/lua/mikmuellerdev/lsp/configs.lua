@@ -54,6 +54,7 @@ local lspconfig = require('lspconfig')
 lspconfig.rust_analyzer.setup(external('mikmuellerdev.lsp.configs.rust_analyzer'))
 lspconfig.vimls.setup(default_opts)
 lspconfig.bashls.setup(default_opts)
+lspconfig.homescript.setup {default_opts}
 lspconfig.sumneko_lua.setup(external('mikmuellerdev.lsp.configs.sumneko_lua'))
 lspconfig.pylsp.setup(default_opts)
 if not _G.is_android then
