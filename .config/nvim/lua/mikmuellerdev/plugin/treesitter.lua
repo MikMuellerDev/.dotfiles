@@ -10,6 +10,16 @@ require('nvim-treesitter.parsers').get_parser_configs().ebnf = {
     },
 }
 
+require('nvim-treesitter.parsers').get_parser_configs().hms = {
+    install_info = {
+        url = 'https://github.com/smarthome-go/tree-sitter-hms.git',
+        files = { 'src/parser.c' },
+        branch = 'main',
+    },
+    filetype = 'homescript',
+}
+vim.filetype.add { extension = { hms = 'homescript' } }
+
 treesitter.setup {
     ensure_installed = {
         'bash',

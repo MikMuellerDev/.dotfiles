@@ -93,7 +93,7 @@ return require('packer').startup {
             config = function() require('mikmuellerdev.plugin.markdown') end,
         }
         use { 'baskerville/vim-sxhkdrc' }
-        use { 'MikMuellerDev/vim-homescript' }
+        -- use { 'MikMuellerDev/vim-homescript' }
         use {
             'saecki/crates.nvim',
             requires = { 'nvim-lua/plenary.nvim' },
