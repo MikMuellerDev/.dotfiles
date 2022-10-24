@@ -1,5 +1,15 @@
 #!/bin/bash
 
+
+promptn () {
+    printf '%s [y/N] ' "$1"
+    read -r choice
+    case "$choice" in
+        [Yy][Ee][Ss]|[Yy]) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
 alias tmux='tmux -2'
 alias root='sudo su -'
 alias sr='screen -r'
@@ -44,7 +54,8 @@ alias lsscreen='xrandr --listactivemonitors'
 command -v pixterm > /dev/null && alias li='pixterm -fa'
 
 # Only setup the poof alias if the poof binary does not exist
-command -v poof > /dev/null || alias poof='poweroff'
+command -v poof > /dev/null || alias poof='promptn "Power off system?" && poweroff'
+alias reboot='promptn "Reboot system?" && reboot'
 
 # LS configuration
 if command -v exa > /dev/null; then
