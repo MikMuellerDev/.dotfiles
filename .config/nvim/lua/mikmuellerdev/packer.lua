@@ -29,7 +29,7 @@ return require('packer').startup {
         -- VIM enhancements
         use {
             'max397574/better-escape.nvim',
-            config = function () require("mikmuellerdev.plugin.better_escape")  end,
+            config = function() require('mikmuellerdev.plugin.better_escape') end,
         }
         use { 'editorconfig/editorconfig-vim' }
         use { 'andymass/vim-matchup' }
@@ -93,7 +93,7 @@ return require('packer').startup {
             config = function() require('mikmuellerdev.plugin.markdown') end,
         }
         use { 'baskerville/vim-sxhkdrc' }
-        -- use { 'MikMuellerDev/vim-homescript' }
+        use { 'smarthome-go/tree-sitter-hms-nvim' }
         use {
             'saecki/crates.nvim',
             requires = { 'nvim-lua/plenary.nvim' },
