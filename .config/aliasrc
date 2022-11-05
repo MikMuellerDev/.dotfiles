@@ -159,6 +159,11 @@ upd () {
     # Global npm packages
     npm update --global
 
+    # Vitex templates
+    if command -v vitex > /dev/null; then
+        vitex templates sync
+    fi
+
     # dotfiles
     updaterc
 }
