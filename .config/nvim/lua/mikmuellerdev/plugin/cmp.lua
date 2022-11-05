@@ -51,8 +51,8 @@ cmp.setup {
                 cmp.confirm { select = true }
             elseif luasnip.expandable() then
                 luasnip.expand()
-            elseif luasnip.expand_or_jumpable() then
-                luasnip.expand_or_jump()
+            -- elseif luasnip.expand_or_jumpable() then
+            --     luasnip.expand_or_jump()
             else
                 fallback()
             end
