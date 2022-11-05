@@ -35,6 +35,11 @@ alias maketex='latexmk -xelatex -pdfxe -halt-on-error'
 alias dprinit='cp ~/.config/dprint/dprint.json dprint.json'
 alias dprintg='dprint --config $XDG_CONFIG_HOME/dprint/dprint.json'
 
+# Smarthome 'git' aliases
+alias sgcl='shome hms script clone'
+alias sgl='shome hms script pull'
+alias sgp='shome hms script push'
+
 # Fix broken US_DE keyboard leyout after upgrade
 alias fixlayout='sudo bash -c "$(curl -sSL https://raw.githubusercontent.com/RubixDev/HandyLinuxStuff/main/us_de_layout/install.sh)"'
 
