@@ -93,7 +93,7 @@ return require('packer').startup {
             config = function() require('mikmuellerdev.plugin.markdown') end,
         }
         use { 'baskerville/vim-sxhkdrc' }
-        use { 'smarthome-go/tree-sitter-hms-nvim' }
+        use { 'smarthome-go/tree-sitter-hms' }
         use {
             'saecki/crates.nvim',
             requires = { 'nvim-lua/plenary.nvim' },
@@ -111,7 +111,7 @@ return require('packer').startup {
 
         -- LSP setup
         use {
-            'https://github.com/MikMuellerDev/nvim-lspconfig',
+            'neovim/nvim-lspconfig',
             config = function() require('mikmuellerdev.lsp') end,
         }
         use {
