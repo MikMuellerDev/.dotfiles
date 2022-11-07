@@ -156,13 +156,11 @@ upd () {
     # Flatpaks
     command -v flatpak && flatpak update
 
+    # Vitex templates
+    command -v vitex && vitex templates sync
+
     # Global npm packages
     npm update --global
-
-    # Vitex templates
-    if command -v vitex > /dev/null; then
-        vitex templates sync
-    fi
 
     # dotfiles
     updaterc
