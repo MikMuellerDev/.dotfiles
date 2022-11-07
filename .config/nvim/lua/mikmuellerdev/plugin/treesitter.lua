@@ -10,6 +10,7 @@ require('nvim-treesitter.parsers').get_parser_configs().ebnf = {
     },
 }
 
+-- homescript language support
 require('nvim-treesitter.parsers').get_parser_configs().hms = {
     install_info = {
         url = 'https://github.com/smarthome-go/tree-sitter-hms.git',
@@ -19,6 +20,18 @@ require('nvim-treesitter.parsers').get_parser_configs().hms = {
     filetype = 'homescript',
 }
 vim.filetype.add { extension = { hms = 'homescript' } }
+
+-- rush language support
+require('nvim-treesitter.parsers').get_parser_configs().rush = {
+    install_info = {
+        url = 'https://github.com/rush-rs/tree-sitter-rush.git',
+        files = { 'src/parser.c' },
+        branch = 'main',
+    },
+}
+vim.filetype.add { extension = { rush = 'rush' } }
+
+vim.filetype.add { extension = { ll = 'llvm' } }
 
 treesitter.setup {
     ensure_installed = {
@@ -30,6 +43,8 @@ treesitter.setup {
         'css',
         'dockerfile',
         'ebnf',
+        'rush',
+        'hms',
         'gdscript',
         -- 'gitattributes', -- currently experimental
         'gitignore',

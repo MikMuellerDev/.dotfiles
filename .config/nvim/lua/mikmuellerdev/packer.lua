@@ -94,6 +94,7 @@ return require('packer').startup {
         }
         use { 'baskerville/vim-sxhkdrc' }
         use { 'smarthome-go/tree-sitter-hms' }
+        use { 'rush-rs/tree-sitter-rush' }
         use {
             'saecki/crates.nvim',
             requires = { 'nvim-lua/plenary.nvim' },

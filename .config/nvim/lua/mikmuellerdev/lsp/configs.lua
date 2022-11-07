@@ -55,6 +55,28 @@ lspconfig.rust_analyzer.setup(external('mikmuellerdev.lsp.configs.rust_analyzer'
 lspconfig.vimls.setup(default_opts)
 lspconfig.bashls.setup(default_opts)
 
+-- rush language server
+local util = require('lspconfig/util')
+local configs = require('lspconfig/configs')
+configs.rush = {
+    default_config = {
+        cmd = { 'rush-ls' },
+        filetypes = { 'rush' },
+        root_dir = util.root_pattern('.git', '.rush'),
+        single_file_support = true,
+        settings = {},
+        init_options = {},
+    },
+    docs = {
+        description = [[
+        ```md
+        rush language server
+        ```
+        ]],
+    },
+}
+configs.rush.setup {default_opts}
+
 -- Homescript language server
 local util = require('lspconfig/util')
 local configs = require('lspconfig/configs')
