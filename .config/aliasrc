@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 promptn () {
     printf '%s [y/N] ' "$1"
     read -r choice
@@ -72,6 +71,12 @@ fi
 space2under() {
     for f in *; do mv "$f" "${f// /_}"; done
 }
+
+# Clipboard aliases
+postclip () { curl -sSL https://clip.rubixdev.de/index.php -F data="$1" -o /dev/null; }
+alias fetchclip='curl -sSL https://clip.rubixdev.de/clipboard.txt'
+alias shareclip='postclip "$(getclip | base64 --wrap=0)"'
+alias loadclip='fetchclip | base64 -d | setclip'
 
 # Wireguard aliases
 rewg () {
