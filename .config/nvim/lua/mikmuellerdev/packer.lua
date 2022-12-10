@@ -57,6 +57,7 @@ return require('packer').startup {
             'ur4ltz/surround.nvim',
             config = function() require('mikmuellerdev.plugin.surround') end,
         }
+        use { 'fidian/hexmode' }
 
         -- GUI enhancements
         use {
@@ -92,6 +93,7 @@ return require('packer').startup {
             requires = { 'godlygeek/tabular' },
             config = function() require('mikmuellerdev.plugin.markdown') end,
         }
+        use { 'jghauser/follow-md-links.nvim' }
         use { 'baskerville/vim-sxhkdrc' }
         use { 'smarthome-go/tree-sitter-hms' }
         use { 'rush-rs/tree-sitter-rush' }
@@ -103,7 +105,7 @@ return require('packer').startup {
         -- Treesitter
         use {
             'nvim-treesitter/nvim-treesitter',
-            run = function() require('nvim-treesitter.install').update { with_sync = true } end,
+            run = ':TSUpdate',
             config = function() require('mikmuellerdev.plugin.treesitter') end,
         }
         use { 'nvim-treesitter/nvim-treesitter-context' }

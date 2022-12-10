@@ -41,6 +41,7 @@ treesitter.setup {
         'comment',
         'cpp',
         'css',
+        'diff',
         'dockerfile',
         'ebnf',
         'rush',
@@ -82,7 +83,6 @@ treesitter.setup {
         disable = {
             'bash',
             'sxhkdrc',
-            'gitcommit'
         },
         additional_vim_regex_highlighting = false,
     },

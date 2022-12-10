@@ -4,6 +4,7 @@ return {
             build = {
                 args = {
                     '-xelatex', -- Build with xelatex
+                    '-shell-escape', -- Allows running shell commands from LaTeX (like ts2tex)
                     '-pdfxe', -- Build with xelatex
                     '-interaction=nonstopmode', -- Ignore errors
                     '-synctex=1', -- Enable SyncTeX
