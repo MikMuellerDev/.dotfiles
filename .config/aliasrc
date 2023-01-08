@@ -1,10 +1,10 @@
 #!/bin/bash
 
-promptn () {
+promptn() {
     printf '%s [y/N] ' "$1"
     read -r choice
     case "$choice" in
-        [Yy][Ee][Ss]|[Yy]) return 0 ;;
+        [Yy][Ee][Ss] | [Yy]) return 0 ;;
         *) return 1 ;;
     esac
 }
@@ -74,13 +74,13 @@ space2under() {
 }
 
 # Clipboard aliases
-postclip () { curl -sSL https://clip.rubixdev.de/index.php -F data="$1" -o /dev/null; }
+postclip() { curl -sSL https://clip.rubixdev.de/index.php -F data="$1" -o /dev/null; }
 alias fetchclip='curl -sSL https://clip.rubixdev.de/clipboard.txt'
 alias shareclip='postclip "$(getclip | base64 --wrap=0)"'
 alias loadclip='fetchclip | base64 -d | setclip'
 
 # Wireguard aliases
-rewg () {
+rewg() {
     systemctl is-active wg-quick@wg0 > /dev/null && {
         sudo systemctl restart wg-quick@wg0
         return 0
@@ -97,7 +97,7 @@ alias wg1='sudo systemctl stop wg-quick@wg0; sudo systemctl start wg-quick@wg1'
 alias stopwg='sudo systemctl stop wg-quick@wg0; sudo systemctl stop wg-quick@wg1'
 
 # Dotfiles aliases
-updaterc () {
+updaterc() {
     pwd="$(pwd)"
     cd ~/.dotfiles || {
         echo 'The .dotfiles folder should be at ~/.dotfiles to auto update'
@@ -109,85 +109,91 @@ updaterc () {
     # Reload shell
     exec "$SHELL"
 }
-editrc () {
+editrc() {
     [ -d "$HOME/.dotfiles" ] || {
         echo 'No .dotfiles folder at ~/.dotfiles'
         return 2
     }
     ${EDITOR:-nvim} ~/.dotfiles/.zshrc
 }
-upd () {
+upd() {
     # Package manager
     pwd="$(pwd)"
     if [ "$(uname -o)" = "Android" ]; then
-        pkg upgrade
+        pkg upgrade || return 1
     elif command -v apt > /dev/null; then
-        sudo apt update
-        sudo apt upgrade
-        sudo apt autoremove
-        sudo apt autoclean
+        sudo apt update || return 1
+        sudo apt upgrade || return 1
+        sudo apt autoremove || return 1
+        sudo apt autoclean || return 1
     else
-        paru -Syu
+        paru -Syu || return 1
     fi
+
+    # Rust toolchains
+    command -v rustup > /dev/null && rustup update || return 1
 
     # Cargo packages
     cargo_pkg_list=()
     while IFS='' read -r line; do cargo_pkg_list+=("$line"); done < <(cargo install --list | grep -E '^[a-z0-9_-]+ v[0-9.]+:$' | cut -f1 -d' ')
     if [ "${#cargo_pkg_list[@]}" -ne 0 ]; then
-        cargo install "${cargo_pkg_list[@]}"
+        cargo install "${cargo_pkg_list[@]}" || return 1
     fi
     unset cargo_pkg_list
 
-    # Rust toolchains
-    command -v rustup > /dev/null && rustup update
-
     # Go on Debian
     if command -v godeb > /dev/null; then
-        [ "$(go version | grep -Po '\d+\.\d+\.\d+')" = "$(godeb list | grep -P '^\d+\.\d+\.\d+$' | tail -n 1)" ] || \
-            godeb install "$(godeb list | grep -P '^\d+\.\d+\.\d+$' | tail -n 1)"
+        [ "$(go version | grep -Po '\d+\.\d+\.\d+')" = "$(godeb list | grep -P '^\d+\.\d+\.\d+$' | tail -n 1)" ] \
+            || godeb install "$(godeb list | grep -P '^\d+\.\d+\.\d+$' | tail -n 1)" || return 1
     fi
 
     # Oh-my-zsh plugins and themes
     pwd="$(pwd)"
     for d in "$ZSH_CUSTOM"/*/*; do
         [ ! -d "$d" ] || cd "$d" || return 2
-        git pull
+        git pull || return 1
     done
     cd "$pwd" || return 2
 
     # Neovim plugins and packages
-    nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
-    nvim --headless -c 'autocmd User MasonUpdateAllComplete quitall' -c 'MasonUpdateAll'
+    nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync' || return 1
+    nvim --headless -c 'autocmd User MasonUpdateAllComplete quitall' -c 'MasonUpdateAll' || return 1
 
     # Flatpaks
-    command -v flatpak && flatpak update
+    command -v flatpak && { flatpak update || return 1; }
 
     # Vitex templates
     command -v vitex && vitex templates sync
 
     # Global npm packages
-    npm update --global
+    npm update --global || return 1
 
     # dotfiles
-    updaterc
+    updaterc || return 1
 }
 pushrc() {
-     pwd="$(pwd)"
-     cd ~/.dotfiles || {
-         echo 'The .dotfiles folder should be at ~/.dotfiles to push updates'
-         return 2
-     }
-     git push
-     cd "$pwd" || return 2
-     # Reload shell
-     exec "$SHELL"
+    pwd="$(pwd)"
+    cd ~/.dotfiles || {
+        echo 'The .dotfiles folder should be at ~/.dotfiles to push updates'
+        return 2
+    }
+    git push
+    cd "$pwd" || return 2
+    # Reload shell
+    exec "$SHELL"
 }
 
-command -v xclip >/dev/null && { alias setclip='xclip -selection c'; alias getclip='xclip -selection c -o'; }
-command -v wl-copy >/dev/null && { alias setclip='wl-copy'; alias getclip='wl-paste'; }
+command -v xclip > /dev/null && {
+    alias setclip='xclip -selection c'
+    alias getclip='xclip -selection c -o'
+}
+command -v wl-copy > /dev/null && {
+    alias setclip='wl-copy'
+    alias getclip='wl-paste'
+}
 
 _paru_bin="$(command -v paru)"
-paru () {
+paru() {
     (
         unset CARGO_TARGET_DIR
         unset GOPATH
@@ -195,14 +201,14 @@ paru () {
     )
 }
 
-godotvim () {
+godotvim() {
     [ "$(basename "$(pwd)")" = "src" ] || cd src || return 1
     [ -e godothost ] && rm godothost > /dev/null
     nvim --listen godothost .
     [ -e godothost ] && rm godothost > /dev/null
 }
 
-lfcd () {
+lfcd() {
     tmp="$(mktemp -uq)"
     trap 'rm -f $tmp >/dev/null 2>&1' HUP INT QUIT TERM PWR EXIT
     lf -last-dir-path="$tmp" "$@"
@@ -213,15 +219,15 @@ lfcd () {
     fi
 }
 
-cheat () { curl -s "cheat.sh/$1" | less; }
-colors () {
+cheat() { curl -s "cheat.sh/$1" | less; }
+colors() {
     zsh -c '
     for i in {0..255}; do
         print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'"'"'\n'"'"'}
     done'
 }
 
-findfont () {
+findfont() {
     [ -n "$1" ] || {
         echo "Please specify a symbol to search for"
         return 1
