@@ -12,20 +12,20 @@ while [ $# -ne 0 ]; do
     shift
 done
 
-prompt () {
+prompt() {
     printf '%s [Y/n] ' "$1"
     read -r choice
     case "$choice" in
-        [Yy][Ee][Ss]|[Yy]|'') return 0 ;;
+        [Yy][Ee][Ss] | [Yy] | '') return 0 ;;
         *) return 1 ;;
     esac
 }
 
-promptn () {
+promptn() {
     printf '%s [y/N] ' "$1"
     read -r choice
     case "$choice" in
-        [Yy][Ee][Ss]|[Yy]) return 0 ;;
+        [Yy][Ee][Ss] | [Yy]) return 0 ;;
         *) return 1 ;;
     esac
 }
@@ -36,14 +36,13 @@ command -v uname > /dev/null && [ "$(uname -o)" = "Android" ] && is_android=true
 # Check if ZDOTDIR is set to non-home path
 # shellcheck disable=SC2016
 (
-    grep -q 'export ZDOTDIR="$HOME/.config/zsh"' "$PREFIX/etc/zsh/zshenv" > /dev/null 2>&1 ||
-    grep -q 'export ZDOTDIR="$HOME/.config/zsh"' "$PREFIX/etc/zshenv" > /dev/null 2>&1
+    grep -q 'export ZDOTDIR="$HOME/.config/zsh"' "$PREFIX/etc/zsh/zshenv" > /dev/null 2>&1 \
+        || grep -q 'export ZDOTDIR="$HOME/.config/zsh"' "$PREFIX/etc/zshenv" > /dev/null 2>&1
 ) && set_in_file=true
-if [ "${ZDOTDIR:-$HOME}" = "$HOME" ] &&
-    [ "$set_in_file" != true ] &&
-    [ "$only_link" != true ] &&
-    prompt "Your ZSH config folder is set to HOME. Do you want to set it to '~/.config/zsh' globally?"
-then
+if [ "${ZDOTDIR:-$HOME}" = "$HOME" ] \
+    && [ "$set_in_file" != true ] \
+    && [ "$only_link" != true ] \
+    && prompt "Your ZSH config folder is set to HOME. Do you want to set it to '~/.config/zsh' globally?"; then
     [ "$is_android" = true ] || sudo=sudo
     [ -e "$PREFIX/etc/zsh/zshenv" ] || {
         $sudo mkdir -p "$PREFIX/etc/zsh"
@@ -69,13 +68,13 @@ mkdir -p ~/.local/state/bash
 mkdir -p "${ZDOTDIR:-$HOME}"
 
 ########## Dependency Installation ##########
-want_deps () {
+want_deps() {
     [ "$only_link" != true ] || return 0
     prompt "Do you want to automatically install all dependencies?"
     return $?
 }
 
-install_android () {
+install_android() {
     want_deps || return
 
     pkg update -y
@@ -116,7 +115,7 @@ install_android () {
     fi
 }
 
-install_arch () {
+install_arch() {
     [ "$only_link" = true ] && return
     unset CARGO_TARGET_DIR
     unset GOPATH
@@ -177,7 +176,7 @@ install_arch () {
     fi
 }
 
-install_debian () {
+install_debian() {
     want_deps || return
 
     sudo apt update
@@ -254,7 +253,7 @@ fi
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended || exit 2
     rm ~/.zshrc
 }
-install_zsh_custom () {
+install_zsh_custom() {
     [ -e "${ZSH_CUSTOM:-${ZSH:-$HOME/.oh-my-zsh}/custom}/$1/$3" ] || {
         git clone --depth=1 "https://github.com/$2/$3" \
             "${ZSH_CUSTOM:-${ZSH:-$HOME/.oh-my-zsh}/custom}/$1/$3"
@@ -270,7 +269,7 @@ install_zsh_custom themes romkatv powerlevel10k
 }
 
 ########### dotfiles Installation ###########
-link () {
+link() {
     src="$1"
     if [ -n "$2" ]; then
         dest="$2"
@@ -298,6 +297,8 @@ link .config/nvim/init.vim
 link .config/nvim/lua
 link .config/nvim/queries
 link .config/paru/paru.conf
+link .config/npm/npmrc
+link .config/git/config
 link .config/python/pythonrc
 link .config/bpython/config
 link .config/pixfetch/config.toml

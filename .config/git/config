@@ -1,0 +1,15 @@
+[user]
+	name = Mik Mueller
+    email = 83001409+MikMuellerDev@users.noreply.github.com
+    signingkey = 83001409+MikMuellerDev@users.noreply.github.com
+[pull]
+	rebase = false
+[init]
+	defaultBranch = main
+[include]
+    path = ~/.config/git/user
+[commit]
+    gpgsign = true
+
+[tag]
+    gpgSign = true
