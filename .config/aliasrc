@@ -94,7 +94,8 @@ rewg() {
 }
 alias wg0='sudo systemctl stop wg-quick@wg1; sudo systemctl start wg-quick@wg0'
 alias wg1='sudo systemctl stop wg-quick@wg0; sudo systemctl start wg-quick@wg1'
-alias stopwg='sudo systemctl stop wg-quick@wg0; sudo systemctl stop wg-quick@wg1'
+alias wg2='sudo systemctl start wg-quick@wg2'
+alias stopwg='sudo systemctl stop wg-quick@wg0; sudo systemctl stop wg-quick@wg1; sudo systemctl stop wg-quick@wg2'
 
 # Dotfiles aliases
 updaterc() {
@@ -161,6 +162,9 @@ upd() {
 
     # Flatpaks
     command -v flatpak && { flatpak update || return 1; }
+
+    # Refresh keyrings
+    gpg --list-keys && { gpg --refresh-keys || return 1; }
 
     # Vitex templates
     command -v vitex && vitex templates sync
