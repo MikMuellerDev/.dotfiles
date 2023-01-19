@@ -40,7 +40,7 @@ utils.try_setup('mason', {
         },
     },
 })
-utils.try_setup('mason-lspconfig', { automatic_installation = true })
+utils.try_setup('mason-lspconfig', { automatic_installation = { exclude = { 'texlab' } } })
 require('mikmuellerdev.lsp.null_ls')
 require('mikmuellerdev.lsp.crates_nvim')
 utils.try_setup('mason-null-ls', { automatic_installation = true })
@@ -75,7 +75,7 @@ configs.rush = {
         ]],
     },
 }
-configs.rush.setup {default_opts}
+configs.rush.setup { default_opts }
 
 -- Homescript language server
 local util = require('lspconfig/util')
@@ -97,7 +97,7 @@ configs.homescript = {
         ]],
     },
 }
-configs.homescript.setup {default_opts}
+configs.homescript.setup { default_opts }
 
 -- Other language servers
 lspconfig.sumneko_lua.setup(external('mikmuellerdev.lsp.configs.sumneko_lua'))
