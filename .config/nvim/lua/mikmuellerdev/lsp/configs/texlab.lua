@@ -3,9 +3,9 @@ return {
         texlab = {
             build = {
                 args = {
-                    '-xelatex', -- Build with xelatex
+                    '-lualatex', -- Build with lualatex
                     '-shell-escape', -- Allows running shell commands from LaTeX (like ts2tex)
-                    '-pdfxe', -- Build with xelatex
+                    '-pdflua', -- Build with lualatex
                     '-interaction=nonstopmode', -- Ignore errors
                     '-synctex=1', -- Enable SyncTeX
                     '-pv', -- Open preview
