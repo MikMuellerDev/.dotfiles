@@ -9,7 +9,7 @@
 [include]
     path = ~/.config/git/user
 [commit]
-    gpgsign = true
+    gpgsign = false
 
 [tag]
-    gpgSign = true
+    gpgSign = false
