@@ -32,10 +32,19 @@ require('nvim-treesitter.parsers').get_parser_configs().rush = {
 }
 vim.filetype.add { extension = { rush = 'rush' } }
 
+require('nvim-treesitter.parsers').get_parser_configs().asm = {
+    install_info = {
+        url = 'https://github.com/rush-rs/tree-sitter-asm.git',
+        files = { 'src/parser.c' },
+        branch = 'main',
+    },
+}
+
 vim.filetype.add { extension = { ll = 'llvm' } }
 
 treesitter.setup {
     ensure_installed = {
+        'asm',
         'bash',
         'bibtex',
         'c',
