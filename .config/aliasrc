@@ -176,7 +176,7 @@ upd() {
     command -v vitex && vitex templates sync
 
     # Global npm packages
-    npm update --global || return 1
+    sudo npm update --global || return 1
 
     # dotfiles
     updaterc || return 1
