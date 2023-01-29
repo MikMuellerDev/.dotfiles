@@ -3,6 +3,7 @@ return {
         ltex = {
             additionalRules = {
                 enablePickyRules = true,
+                languageModel = '~/ngrams',
                 -- motherTongue = 'de-De',
             },
             disabledRules = {
@@ -47,6 +48,20 @@ return {
                     'deallocating',
                     'expr',
                     'pos',
+                    'pseudoinstruction',
+                    'addi',
+                    'li',
+                    'doublewords',
+                    'ld',
+                    'sd',
+                    'ret',
+                    'ra',
+                    'rodata',
+                    'sp',
+                    'sx',
+                    'riscv',
+                    'fancyvrb'
+
                 },
             },
         },
