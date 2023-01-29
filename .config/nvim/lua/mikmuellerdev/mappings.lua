@@ -76,3 +76,6 @@ map('n', '<Leader>mw', ':setlocal invwrap<CR>')
 -- Insert line above/below cursor without insert mode
 map('', '<Leader>N', ':<C-U>call append(line(".")-1, repeat([""], v:count1))<CR>')
 map('', '<Leader>n', ':<C-U>call append(line("."), repeat([""], v:count1))<CR>')
+
+-- Smarthome / Homescript
+map('n', '<leader>hp', ':HmsPush<CR>')
