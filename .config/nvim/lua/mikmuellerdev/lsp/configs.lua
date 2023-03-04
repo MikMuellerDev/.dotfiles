@@ -100,13 +100,13 @@ configs.homescript = {
 configs.homescript.setup { default_opts }
 
 -- Other language servers
-lspconfig.sumneko_lua.setup(external('mikmuellerdev.lsp.configs.sumneko_lua'))
+lspconfig.lua_ls.setup(external('mikmuellerdev.lsp.configs.lua_ls'))
 lspconfig.pylsp.setup(default_opts)
 if not _G.is_android then
     lspconfig.dockerls.setup(default_opts)
     lspconfig.golangci_lint_ls.setup(default_opts)
     lspconfig.gopls.setup(default_opts)
-    lspconfig.jdtls.setup(default_opts)
+    lspconfig.jdtls.setup(external('mikmuellerdev.lsp.configs.jdtls'))
     lspconfig.kotlin_language_server.setup(default_opts)
     lspconfig.gdscript.setup(default_opts)
     lspconfig.clangd.setup(default_opts)
