@@ -98,6 +98,7 @@ return require('packer').startup {
         use { 'smarthome-go/tree-sitter-hms' }
         use { 'rush-rs/tree-sitter-rush' }
         use { 'rush-rs/tree-sitter-asm' }
+        use { 'mfussenegger/nvim-jdtls' }
         use {
             'saecki/crates.nvim',
             requires = { 'nvim-lua/plenary.nvim' },
