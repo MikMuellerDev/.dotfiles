@@ -23,6 +23,12 @@ alias cr='rsync -ravzp'
 alias mdl='yt-dlp --extract-audio --audio-format=mp3 --embed-thumbnail'
 alias cdtemp='cd $(mktemp -d)'
 
+# shred and deallocate directory
+shreddir() {
+    find "$@" -type f -exec shred -uv -n 1 --random-source=/dev/urandom {} \;
+    rm -rv "$@"
+}
+
 # shellcheck disable=SC2139
 alias wget="wget --hsts-file='$XDG_DATA_HOME/wget-hsts'"
 
