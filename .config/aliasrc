@@ -235,6 +235,8 @@ lfcd() {
     fi
 }
 
+alias vpaper='echo "Downloading paper..." && curl -sSfL https://paper.rush-lang.de/main.pdf | zathura -'
+
 cheat() { curl -s "cheat.sh/$1" | less; }
 colors() {
     zsh -c '
