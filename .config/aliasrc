@@ -32,6 +32,9 @@ shreddir() {
 # shellcheck disable=SC2139
 alias wget="wget --hsts-file='$XDG_DATA_HOME/wget-hsts'"
 
+# Fix sxhkd
+alias fixsxhkd="killall sxhkd; bspc wm -r"
+
 # Development aliases
 alias mdev='make vite-dev'
 alias mrun='make run'
