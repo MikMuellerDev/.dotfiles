@@ -88,10 +88,10 @@ alias fetchclip='curl -sSL https://clip.rubixdev.de/clipboard.txt'
 alias shareclip='postclip "$(getclip | base64 --wrap=0)"'
 alias loadclip='fetchclip | base64 -d | setclip'
 
-speedup () {
+speedup() {
     local ext
     ext="${1##*.}"
-    ffmpeg -i "$1" -filter_complex "[0:v]setpts=$(( 1 / $2 ))*PTS[v];[0:a]atempo=$2[a]" -map "[v]" -map "[a]" "${1%."$ext"}.output.$ext"
+    ffmpeg -i "$1" -filter_complex "[0:v]setpts=$((1 / $2))*PTS[v];[0:a]atempo=$2[a]" -map "[v]" -map "[a]" "${1%."$ext"}.output.$ext"
 }
 
 # Wireguard aliases
@@ -209,6 +209,13 @@ command -v xclip > /dev/null && {
 command -v wl-copy > /dev/null && {
     alias setclip='wl-copy'
     alias getclip='wl-paste'
+}
+
+command -v xclip > /dev/null && {
+    # reads a file via `cat` in order to save it in the clipboard
+    cclip() {
+        cat "$1" | setclip
+    }
 }
 
 _paru_bin="$(command -v paru)"
