@@ -70,6 +70,14 @@ return require('packer').startup {
             config = function() require('mikmuellerdev.plugin.indent_blankline') end,
         }
 
+        -- Tree
+        use { 'nvim-tree/nvim-web-devicons' }
+        use {
+            'nvim-tree/nvim-tree.lua',
+            config = function() require('mikmuellerdev.plugin.nvim_tree') end
+        }
+
+
         -- Fuzzy Finder
         use {
             'nvim-telescope/telescope-fzf-native.nvim',

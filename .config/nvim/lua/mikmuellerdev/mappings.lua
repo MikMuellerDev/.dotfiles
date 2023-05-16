@@ -79,3 +79,6 @@ map('', '<Leader>n', ':<C-U>call append(line("."), repeat([""], v:count1))<CR>')
 
 -- Smarthome / Homescript
 map('n', '<leader>hp', ':HmsPush<CR>')
+
+-- Smarthome / Homescript
+map('n', '<leader>t', ':NvimTreeToggle<CR>')
