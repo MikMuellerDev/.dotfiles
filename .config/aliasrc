@@ -44,10 +44,43 @@ alias maketex='latexmk -xelatex -pdfxe -halt-on-error'
 alias dprinit='cp ~/.config/dprint/dprint.json dprint.json'
 alias dprintg='dprint --config $XDG_CONFIG_HOME/dprint/dprint.json'
 
-# Smarthome 'git' aliases
-alias sgcl='shome hms script clone'
-alias sgl='shome hms script pull'
-alias sgp='shome hms script push'
+# Smarthome aliases
+command -v shome > /dev/null && {
+    alias sgcl='shome hms script clone'
+    alias sgl='shome hms script pull'
+    alias sgp='shome hms script push'
+
+    shome-weather() {
+        echo """
+            let w = weather;
+            println(fmt(
+                '%s Weather: %s | Temperature: %d°C | Humidity: %d%% %s',
+                '#'.repeat(4),
+                w.title,
+                w.temperature.round(),
+                w.humidity,
+                '#'.repeat(4),
+            ));
+        """ | tr -d '\n' | shome hms repl 2&> less
+    }
+
+    shome-charge-for() {
+        shome hms run "charger_off_minutes" -a "hours:$1"
+    }
+
+    shome-timer() {
+        shome hms run "timer" -a "minutes:$1"
+    }
+
+    shome-play_url() {
+    echo """
+        import { __CONFIG, __play_url, __connect } from radio;
+        __play_url('$1');
+    """ | tr -d '\n' | shome hms repl 2&> less
+}
+
+    alias shome-radio="shome hms run 'radio_control'"
+}
 
 # Fix broken US_DE keyboard leyout after upgrade
 alias fixlayout='sudo bash -c "$(curl -sSL https://raw.githubusercontent.com/RubixDev/HandyLinuxStuff/main/us_de_layout/install.sh)"'
