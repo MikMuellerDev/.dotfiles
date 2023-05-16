@@ -1,19 +1,19 @@
+[Added Associations]
+audio/mpeg=mpv.desktop;
+
 [Default Applications]
-text/*=nvim.desktop
-text/xml=nvim.desktop
-text/plain=nvim.desktop
 application/json=nvim.desktop
-
-inode/directory=lf.desktop
-image/*=nsxiv.desktop
 application/pdf=zathura.desktop
-
+audio/mpeg=mpv.desktop;
 image/*=nsxiv.desktop
-image/png=nsxiv.desktop
 image/jpeg=nsxiv.desktop
-
+image/png=nsxiv.desktop
+inode/directory=lf.desktop
+text/*=nvim.desktop
+text/plain=nvim.desktop
+text/xml=nvim.desktop
 video/*=mpv.desktop
-video/x-msvideo=mpv.desktop
-video/quicktime=mpv.desktop
-video/mp4=mpv.desktop
 video/MP2T=mpv.desktop
+video/mp4=mpv.desktop
+video/quicktime=mpv.desktop
+video/x-msvideo=mpv.desktop
