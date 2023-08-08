@@ -83,7 +83,14 @@ command -v shome > /dev/null && {
 }
 
 # Fix broken US_DE keyboard leyout after upgrade
-alias fixlayout='sudo bash -c "$(curl -sSL https://raw.githubusercontent.com/RubixDev/HandyLinuxStuff/main/us_de_layout/install.sh)"'
+fixlayout() {
+    sudo bash -c "$(curl -sSL https://raw.githubusercontent.com/RubixDev/HandyLinuxStuff/main/us_de_layout/install.sh)"
+    echo "Reloading BSPWM in 2 seconds..."
+    sleep 2
+    touch ~/.config/bspwm/is_reload && bspc wm -r; \
+    pkill -USR1 -x sxhkd
+    echo "BSPWM Reloaded."
+}
 
 # SSH aliases
 alias sss='ssh cloud'
