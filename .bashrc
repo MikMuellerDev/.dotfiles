@@ -14,3 +14,4 @@ source "$HOME/.config/aliasrc"
 
 # autojump
 [[ -s /usr/share/autojump/autojump.bash ]] && source /usr/share/autojump/autojump.bash
+export PATH="$HOME/opt/cross/bin:$PATH"
