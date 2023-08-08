@@ -78,11 +78,9 @@ configs.rush = {
 configs.rush.setup { default_opts }
 
 -- Homescript language server
-local util = require('lspconfig/util')
-local configs = require('lspconfig/configs')
 configs.homescript = {
     default_config = {
-        cmd = { 'homescript-language-server' },
+        cmd = { 'homescript-ls-rs' },
         filetypes = { 'homescript' },
         root_dir = util.root_pattern('.hms.toml', '.git'),
         single_file_support = true,
@@ -102,6 +100,13 @@ configs.homescript.setup { default_opts }
 -- Other language servers
 lspconfig.lua_ls.setup(external('mikmuellerdev.lsp.configs.lua_ls'))
 lspconfig.pylsp.setup(default_opts)
+lspconfig.typst_lsp.setup {
+    settings = {
+        exportPdf = "onType" -- Choose onType, onSave or never.
+        -- serverPath = "" -- Normally, there is no need to uncomment it.
+    }
+}
+
 if not _G.is_android then
     lspconfig.dockerls.setup(default_opts)
     lspconfig.golangci_lint_ls.setup(default_opts)

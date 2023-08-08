@@ -107,6 +107,7 @@ return require('packer').startup {
         use { 'rush-rs/tree-sitter-rush' }
         use { 'rush-rs/tree-sitter-asm' }
         use { 'mfussenegger/nvim-jdtls' }
+        use {'kaarmu/typst.vim', ft = {'typst'}}
         use {
             'saecki/crates.nvim',
             requires = { 'nvim-lua/plenary.nvim' },
