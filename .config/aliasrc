@@ -19,7 +19,7 @@ alias rm='rm -v'
 alias ip='ip -c'
 alias cl='clear'
 alias sctl='sudo systemctl'
-alias cr='rsync -ravzp'
+alias cr='rsync -ravzp --progress'
 alias mdl='yt-dlp --extract-audio --audio-format=mp3 --embed-thumbnail'
 alias cdtemp='cd $(mktemp -d)'
 
