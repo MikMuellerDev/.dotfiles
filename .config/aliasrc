@@ -52,7 +52,10 @@ command -v shome > /dev/null && {
 
     shome-weather() {
         echo """
-            let w = weather;
+        import weather from location;
+
+        fn main() {
+            let w = weather();
             println(fmt(
                 '%s Weather: %s | Temperature: %d°C | Humidity: %d%% %s',
                 '#'.repeat(4),
@@ -61,6 +64,7 @@ command -v shome > /dev/null && {
                 w.humidity,
                 '#'.repeat(4),
             ));
+        }
         """ | tr -d '\n' | shome hms repl 2&> less
     }
 

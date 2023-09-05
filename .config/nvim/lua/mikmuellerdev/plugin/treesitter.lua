@@ -14,7 +14,7 @@ require('nvim-treesitter.parsers').get_parser_configs().ebnf = {
 -- homescript language support
 require('nvim-treesitter.parsers').get_parser_configs().hms = {
     install_info = {
-        url = 'https://github.com/smarthome-go/tree-sitter-hms.git',
+        url = '/home/mik/go/src/github.com/smarthome-go/tree-sitter-hms',
         files = { 'src/parser.c' },
         branch = 'main',
     },

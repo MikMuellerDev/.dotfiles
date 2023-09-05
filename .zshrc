@@ -77,7 +77,7 @@ source ~/.config/aliasrc
 bindkey -v
 bindkey -s '^o' '^ulfcd\n'
 
-#echo
-#pixfetch
+# echo
+# pixfetch
 
 [[ ! -f "${ZDOTDIR:-$HOME}/.p10k.zsh" ]] || source "${ZDOTDIR:-$HOME}/.p10k.zsh"
