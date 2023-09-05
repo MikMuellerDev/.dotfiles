@@ -12,7 +12,7 @@ export CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 
 # Go configuration
-export GOPATH="$XDG_DATA_HOME/go"
+export GOPATH="$HOME/go"
 export GOBIN="$GOPATH/bin"
 
 # ZSH configuration
