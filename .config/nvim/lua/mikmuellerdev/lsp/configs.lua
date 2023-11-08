@@ -77,6 +77,26 @@ configs.rush = {
 }
 configs.rush.setup { default_opts }
 
+-- HPI language server
+configs.hpi = {
+    default_config = {
+        cmd = { 'hpi-cli', 'ls' },
+        filetypes = { 'hpi' },
+        root_dir = util.root_pattern('.git', '.hpi'),
+        single_file_support = true,
+        settings = {},
+        init_options = {},
+    },
+    docs = {
+        description = [[
+        ```md
+        HPI language server
+        ```
+        ]],
+    },
+}
+configs.hpi.setup { default_opts }
+
 -- Homescript language server
 configs.homescript = {
     default_config = {

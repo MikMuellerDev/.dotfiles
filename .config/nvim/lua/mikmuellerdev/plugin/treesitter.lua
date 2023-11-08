@@ -22,6 +22,16 @@ require('nvim-treesitter.parsers').get_parser_configs().hms = {
 }
 vim.filetype.add { extension = { hms = 'homescript' } }
 
+-- HPI language support
+require('nvim-treesitter.parsers').get_parser_configs().hpi = {
+    install_info = {
+        url = 'https://github.com/hpi23/tree-sitter-hpi.git',
+        files = { 'src/parser.c' },
+        branch = 'main',
+    },
+}
+vim.filetype.add { extension = { hpi = 'hpi' } }
+
 -- rush language support
 require('nvim-treesitter.parsers').get_parser_configs().rush = {
     install_info = {
@@ -56,6 +66,7 @@ treesitter.setup {
         'ebnf',
         'rush',
         'hms',
+        'hpi',
         'gdscript',
         -- 'gitattributes', -- currently experimental
         'gitignore',

@@ -105,6 +105,7 @@ return require('packer').startup {
         use { 'baskerville/vim-sxhkdrc' }
         use { 'smarthome-go/tree-sitter-hms' }
         use { 'rush-rs/tree-sitter-rush' }
+        use { 'hpi23/tree-sitter-hpi' }
         use { 'rush-rs/tree-sitter-asm' }
         use { 'mfussenegger/nvim-jdtls' }
         use {'kaarmu/typst.vim', ft = {'typst'}}
