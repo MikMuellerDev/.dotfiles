@@ -9,6 +9,7 @@ promptn() {
     esac
 }
 
+alias rf='readlink -f'
 alias tmux='tmux -2'
 alias root='sudo su -'
 alias sr='screen -r'
@@ -38,7 +39,7 @@ alias fixsxhkd="killall sxhkd; bspc wm -r"
 # Development aliases
 alias mdev='make vite-dev'
 alias mrun='make run'
-alias shdb='docker exec -it smarthome-mariadb  mysql -u root --password=password -D smarthome'
+alias shdb='docker exec -it smarthome-mariadb mariadb -u root --password=password -D smarthome'
 alias shdbt='docker exec -it smarthome-mariadb-testing mysql -u root --password=testing -D smarthome'
 alias maketex='latexmk -xelatex -pdfxe -halt-on-error'
 alias dprinit='cp ~/.config/dprint/dprint.json dprint.json'
@@ -176,6 +177,11 @@ editrc() {
     }
     ${EDITOR:-nvim} ~/.dotfiles/.zshrc
 }
+
+regenlock() {
+    betterlockscreen -u ~/Pictures/wallpapers/mm.de.png --blur 20 --desc "This device belongs to Mik Müller <mik.mueller@hpi.de>"
+}
+
 upd() {
     # Package manager
     pwd="$(pwd)"
@@ -189,6 +195,9 @@ upd() {
     else
         paru -Syu || return 1
     fi
+
+    # Lockscreen configuration
+    regenlock
 
     # Rust toolchains
     command -v rustup > /dev/null && rustup update || return 1

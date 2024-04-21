@@ -37,7 +37,7 @@ super + {_,shift + }q
 
 # lock screen
 super + shift + s
-    slock
+    betterlockscreen -l
 
 # Rotate currently active window with its neighbour
 super + shift + i
@@ -103,7 +103,7 @@ super + {o,i}
 
 # focus or send to the given desktop
 super + {_,shift + }{1-9,0}
-    bspc {desktop -f,node -d} '^{1-9,10}'
+    bspc {desktop -f,node -d} '{1-9,10}'
 
 #
 # preselect

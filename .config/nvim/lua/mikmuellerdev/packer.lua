@@ -189,6 +189,8 @@ return require('packer').startup {
         -- Markdown preview
         use { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install', disable = _G.is_android }
 
+        use { 'glacambre/firenvim' }
+
         -- Automatically set up your configuration after cloning packer.nvim
         if packer_bootstrap then require('packer').sync() end
     end,

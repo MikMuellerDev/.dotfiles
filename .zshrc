@@ -10,24 +10,10 @@ if [ -n "$DESKTOP_SESSION" ] && command -v gnome-keyring-daemon > /dev/null; the
   export SSH_AUTH_SOCK
 fi
 
-if command -v uname > /dev/null && [ "$(uname -o)" = "Android" ]; then
-    is_android=true
-else
-    is_android=false
-fi
-
 source ~/.config/env
 export HISTFILE="$XDG_STATE_HOME/zsh/history"
 
-if [ "$is_android" = true ]; then
-    if [ -n "$SSH_TTY" ]; then
-        ZSH_THEME="powerlevel10k/powerlevel10k"
-    else
-        ZSH_THEME="zish"
-    fi
-else
-    ZSH_THEME="powerlevel10k/powerlevel10k"
-fi
+ZSH_THEME="powerlevel10k/powerlevel10k"
 DISABLE_MAGIC_FUNCTIONS="true"
 
 plugins=(
@@ -78,6 +64,6 @@ bindkey -v
 bindkey -s '^o' '^ulfcd\n'
 
 # echo
-# pixfetch
+pixfetch
 
 [[ ! -f "${ZDOTDIR:-$HOME}/.p10k.zsh" ]] || source "${ZDOTDIR:-$HOME}/.p10k.zsh"
