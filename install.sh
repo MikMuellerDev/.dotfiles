@@ -6,14 +6,20 @@
 }
 
 while [ $# -ne 0 ]; do
-    if [ "$1" = "--only-link" ]; then
-        only_link="true"
-    fi
+    case "$1" in
+        --only-link) only_link="true" ;;
+        --noninteractive) noninteractive="true" ;;
+        --shell) shell_only="true" ;;
+    esac
     shift
 done
 
 prompt() {
     printf '%s [Y/n] ' "$1"
+    if [ "$noninteractive" = true ]; then
+        echo "Y"
+        return 0
+    fi
     read -r choice
     case "$choice" in
         [Yy][Ee][Ss] | [Yy] | '') return 0 ;;
@@ -23,6 +29,10 @@ prompt() {
 
 promptn() {
     printf '%s [y/N] ' "$1"
+    if [ "$noninteractive" = true ]; then
+        echo "n"
+        return 1
+    fi
     read -r choice
     case "$choice" in
         [Yy][Ee][Ss] | [Yy]) return 0 ;;
@@ -70,6 +80,12 @@ mkdir -p "${ZDOTDIR:-$HOME}"
 ########## Dependency Installation ##########
 want_deps() {
     [ "$only_link" != true ] || return 0
+    [ "$shell_only" != true ] || return 1
+    if [ "$noninteractive" = true ]; then
+        printf '%s [y/N] ' "Do you want to automatically install all dependencies?"
+        echo "n"
+        return 1
+    fi
     prompt "Do you want to automatically install all dependencies?"
     return $?
 }
@@ -237,15 +253,17 @@ install_debian() {
     fi
 }
 
-if [ "$is_android" = true ]; then
-    [ "$is_root" = true ] || install_android
-else
-    . /etc/os-release
-    case "|$ID|$ID_LIKE|" in
-        *"|arch|"*) install_arch ;;
-        *"|debian|"*) install_debian ;;
-        *) echo "Automatic dependency installation is not supported for this distribution" ;;
-    esac
+if [ "$shell_only" != true ]; then
+    if [ "$is_android" = true ]; then
+        [ "$is_root" = true ] || install_android
+    else
+        . /etc/os-release
+        case "|$ID|$ID_LIKE|" in
+            *"|arch|"*) install_arch ;;
+            *"|debian|"*) install_debian ;;
+            *) echo "Automatic dependency installation is not supported for this distribution" ;;
+        esac
+    fi
 fi
 
 ########### Oh My ZSH ###########
@@ -283,44 +301,53 @@ link() {
     ln -s "$PWD/$src" "$dest"
 }
 
-# Uninstall SpaceVim if present
-[ -e ~/.SpaceVim ] && curl -sLf https://spacevim.org/install.sh | bash -s -- --uninstall
+if [ "$shell_only" = true ]; then
+    # Create symlinks (shell-only)
+    link .zshrc "${ZDOTDIR:-$HOME}/.zshrc"
+    link .p10k.zsh "${ZDOTDIR:-$HOME}/.p10k.zsh"
+    link .config/env
+    link .config/aliasrc
+    link .config/pixfetch/config.toml
+else
+    # Uninstall SpaceVim if present
+    [ -e ~/.SpaceVim ] && curl -sLf https://spacevim.org/install.sh | bash -s -- --uninstall
 
-# Create symlinks
-link .zshrc "${ZDOTDIR:-$HOME}/.zshrc"
-link .p10k.zsh "${ZDOTDIR:-$HOME}/.p10k.zsh"
-link .bashrc
-link .config/env
-link .config/aliasrc
-link .config/tmux/tmux.conf
-link .config/nvim/init.vim
-link .config/nvim/lua
-link .config/nvim/queries
-link .config/paru/paru.conf
-link .config/npm/npmrc
-link .config/git/config
-link .config/python/pythonrc
-link .config/bpython/config
-link .config/pixfetch/config.toml
-link .config/dprint
-if [ "$is_desktop" = true ]; then
-    link .config/alacritty/alacritty.yml
-    link .config/bspwm/bspwmrc
-    link .config/sxhkd/sxhkdrc
-    link .config/dunst/dunstrc
-    link .config/picom.conf
-    link .config/polybar/config.ini
-    link .gtkrc-2.0 "${GTK2_RC_FILES:-$HOME/.gtkrc-2.0}"
-    link .config/gtk-3.0/settings.ini
-    link .config/qt5ct/qt5ct.conf
-    link .icons/default/index.theme
-    link .config/Kvantum/kvantum.kvconfig
-    link .config/BetterDiscord/themes/SimplyTransparent.theme.css
+    # Create symlinks
+    link .zshrc "${ZDOTDIR:-$HOME}/.zshrc"
+    link .p10k.zsh "${ZDOTDIR:-$HOME}/.p10k.zsh"
+    link .bashrc
+    link .config/env
+    link .config/aliasrc
+    link .config/tmux/tmux.conf
+    link .config/nvim/init.vim
+    link .config/nvim/lua
+    link .config/nvim/queries
+    link .config/paru/paru.conf
+    link .config/npm/npmrc
+    link .config/git/config
+    link .config/python/pythonrc
+    link .config/bpython/config
+    link .config/pixfetch/config.toml
+    link .config/dprint
+    if [ "$is_desktop" = true ]; then
+        link .config/alacritty/alacritty.yml
+        link .config/bspwm/bspwmrc
+        link .config/sxhkd/sxhkdrc
+        link .config/dunst/dunstrc
+        link .config/picom.conf
+        link .config/polybar/config.ini
+        link .gtkrc-2.0 "${GTK2_RC_FILES:-$HOME/.gtkrc-2.0}"
+        link .config/gtk-3.0/settings.ini
+        link .config/qt5ct/qt5ct.conf
+        link .icons/default/index.theme
+        link .config/Kvantum/kvantum.kvconfig
+        link .config/BetterDiscord/themes/SimplyTransparent.theme.css
 
-    # XDG-MIME default apps
-    link .config/mimeapps.list
-    link .local/share/applications/lf.desktop
-    link .local/share/applications/nsxiv.desktop
-    link .local/share/applications/nvim.desktop
-    link .local/share/applications/zathura.desktop
+        # XDG-MIME default apps
+        link .config/mimeapps.list
+        link .local/share/applications/lf.desktop
+        link .local/share/applications/nsxiv.desktop
+        link .local/share/applications/nvim.desktop
+        link .local/share/applications/zathura.desktop
+    fi
 fi
